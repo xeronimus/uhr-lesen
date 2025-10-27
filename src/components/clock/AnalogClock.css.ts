@@ -1,10 +1,10 @@
 import {style} from '@vanilla-extract/css';
-import {CLOCK_OUTER_SIZE} from "./AnalogClock";
-import {vars} from "../themes.css";
 
+import {vars} from '../themes.css';
+import {CLOCK_OUTER_SIZE} from './AnalogClock';
 
 export const clockContainer = style({
-  display: "inline-block",
+  display: 'inline-block',
   position: 'relative',
   width: CLOCK_OUTER_SIZE,
   height: CLOCK_OUTER_SIZE,
@@ -46,7 +46,7 @@ export const minuteHand = style({
   width: 4,
   height: 0.38 * CLOCK_OUTER_SIZE,
   marginLeft: 0,
-  backgroundColor: vars.colors.blue,
+  backgroundColor: vars.colors.blue
 });
 
 export const numberHours = style({
@@ -59,6 +59,21 @@ export const numberHours = style({
   fontSize: 28,
   fontWeight: 'bold',
   color: '#333',
+  userSelect: 'none'
+});
+export const numberHours24 = style({
+  position: 'absolute',
+  width: 30,
+  height: 30,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: 14,
+  fontWeight: 'bold',
+  padding: 0,
+  backgroundColor: '#888',
+  color: '#fff',
+  borderRadius: '50%',
   userSelect: 'none'
 });
 

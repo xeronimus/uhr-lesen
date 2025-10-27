@@ -3,5 +3,5 @@
 export const viewBase = style({
   padding: 48,
   overflowX: 'auto',
-  overflowY: 'auto',
+  overflowY: 'auto'
 });

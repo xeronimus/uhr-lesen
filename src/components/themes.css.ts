@@ -3,7 +3,7 @@ import {createTheme, createThemeContract} from '@vanilla-extract/css';
 const colors = {
   fontGrey: '#363636',
   red: '#fa5320',
-  blue: '#00a6ff',
+  blue: '#00a6ff'
 };
 
 const constants = {
