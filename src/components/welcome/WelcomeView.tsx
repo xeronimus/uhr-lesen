@@ -2,9 +2,10 @@ import {useEffect, useState} from 'react';
 
 import {timeToGerman} from '../../data/timeToGerman';
 import AnalogClock from '../clock/AnalogClock';
+import BuildInfo from '../commons/BuildInfo';
 import Button from '../commons/Button';
 import {Checkbox} from '../commons/Checkbox';
-import {gridRow} from '../commons/_commons.css';
+import {gridRow, gridRowStack, growRow} from '../commons/_commons.css';
 import {timeText, welcomeView} from './WelcomeView.css';
 
 const WelcomeView = () => {
@@ -32,7 +33,7 @@ const WelcomeView = () => {
           onChange={onClockNewTimeSet}
         />
 
-        <div className={gridRow}>
+        <div className={gridRowStack}>
           <Button onClick={onJetztClicked} primary={true}>
             Uhr auf jetzt einstellen
           </Button>
@@ -46,12 +47,16 @@ const WelcomeView = () => {
       </div>
 
       <div className={timeText}>
-        <h4>{timeTextShown ? timeToGerman(hour, minute) : '-'}</h4>
+        <h4>{timeTextShown ? timeToGerman(hour, minute) : '******'}</h4>
+      </div>
+
+      <div className={growRow}>
+        <Checkbox label="Minuten" value={showMinuteNumbers} onChange={() => setShowMinuteNumbers(!showMinuteNumbers)} />
+        <Checkbox label="24h" value={show24HourNumbers} onChange={() => setShow24HourNumbers(!show24HourNumbers)} />
       </div>
 
       <div>
-        <Checkbox label="Minuten" value={showMinuteNumbers} onChange={() => setShowMinuteNumbers(!showMinuteNumbers)} />
-        <Checkbox label="24h" value={show24HourNumbers} onChange={() => setShow24HourNumbers(!show24HourNumbers)} />
+        <BuildInfo />
       </div>
     </div>
   );
