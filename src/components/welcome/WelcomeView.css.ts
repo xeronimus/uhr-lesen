@@ -7,7 +7,9 @@ export const welcomeView = style([
   {
     display: 'flex',
     flexDirection: 'column',
-    gap: 20
+    gap: 40,
+    alignItems: 'center',
+    width: '100%',
   }
 ]);
 
@@ -16,5 +18,6 @@ globalStyle(`${welcomeView} label`, {
 });
 
 export const timeText = style({
-  fontSize: '120%'
+  fontSize: '120%',
+  textAlign: 'center'
 });

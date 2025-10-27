@@ -5,7 +5,7 @@ import AnalogClock from '../clock/AnalogClock';
 import BuildInfo from '../commons/BuildInfo';
 import Button from '../commons/Button';
 import {Checkbox} from '../commons/Checkbox';
-import {gridRow, gridRowStack, growRow} from '../commons/_commons.css';
+import {gridRow, growRow} from '../commons/_commons.css';
 import {timeText, welcomeView} from './WelcomeView.css';
 
 const WelcomeView = () => {
@@ -14,6 +14,7 @@ const WelcomeView = () => {
 
   const [showMinuteNumbers, setShowMinuteNumbers] = useState<boolean>(false);
   const [showMinuteTicks, setShowMinuteTicks] = useState<boolean>(true);
+  const [show12HourNumbers, setShow12HourNumbers] = useState<boolean>(true);
   const [show24HourNumbers, setShow24HourNumbers] = useState<boolean>(false);
 
   const [timeTextShown, setTimeTextShown] = useState<boolean>(false);
@@ -24,32 +25,43 @@ const WelcomeView = () => {
 
   return (
     <div className={welcomeView}>
+
       <div className={gridRow}>
+        <Button onClick={onJetztClicked} primary={true}>
+          Uhr auf jetzt einstellen
+        </Button>
+        <Button onClick={onRandomClicked} primary={true}>
+          Uhr auf zufällige Zeit einstellen
+        </Button>
+      </div>
+
+
+      <div className={gridRow}>
+
+
         <AnalogClock
           hour={hour}
           minute={minute}
           showMinutesNumbers={showMinuteNumbers}
           showMinutesTicks={showMinuteTicks}
+          show12HourNumbers={show12HourNumbers}
           show24HourNumbers={show24HourNumbers}
           startChanging={() => setTimeTextShown(false)}
           onChange={onClockNewTimeSet}
         />
 
-        <div className={gridRowStack}>
-          <Button onClick={onJetztClicked} primary={true}>
-            Uhr auf jetzt einstellen
-          </Button>
-          <Button onClick={onRandomClicked} primary={true}>
-            Uhr auf zufällige Zeit einstellen
-          </Button>
-          <Button onClick={() => setTimeTextShown(true)} primary={true}>
-            Zeit als Text anzeigen
-          </Button>
-        </div>
       </div>
 
+
+      <div className={gridRow}>
+        <Button onClick={() => setTimeTextShown(true)} primary={true}>
+          Zeit als Text anzeigen
+        </Button>
+      </div>
+
+
       <div className={timeText}>
-        <h4>{timeTextShown ? `${hour > 11 ? hour - 12 : hour}:${String(minute).padStart(2, '0')}` : '******'}</h4>
+        <h4>{timeTextShown ? `${hour > 11 ? hour - 12 : hour}:${String(minute).padStart(2, '0')}    |  ${hour < 12 ? hour + 12 : hour}:${String(minute).padStart(2, '0')}` : '******'}</h4>
         <h4>{timeTextShown ? `${timeToGerman(hour, minute)}` : '******'}</h4>
       </div>
 
@@ -59,7 +71,9 @@ const WelcomeView = () => {
           value={showMinuteNumbers}
           onChange={() => {
             setShowMinuteNumbers(!showMinuteNumbers);
-            setShowMinuteTicks(showMinuteNumbers);
+            if (!showMinuteNumbers) {
+              setShowMinuteTicks(false)
+            }
           }}
         />
         <Checkbox
@@ -67,14 +81,17 @@ const WelcomeView = () => {
           value={showMinuteTicks}
           onChange={() => {
             setShowMinuteTicks(!showMinuteTicks);
-            setShowMinuteNumbers(showMinuteTicks);
+            if (!showMinuteTicks) {
+              setShowMinuteNumbers(false)
+            }
           }}
         />
-        <Checkbox label="24h" value={show24HourNumbers} onChange={() => setShow24HourNumbers(!show24HourNumbers)} />
+        <Checkbox label="12h" value={show12HourNumbers} onChange={() => setShow12HourNumbers(!show12HourNumbers)}/>
+        <Checkbox label="24h" value={show24HourNumbers} onChange={() => setShow24HourNumbers(!show24HourNumbers)}/>
       </div>
 
       <div>
-        <BuildInfo />
+        <BuildInfo/>
       </div>
     </div>
   );

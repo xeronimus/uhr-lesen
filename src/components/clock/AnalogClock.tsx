@@ -9,6 +9,7 @@ interface AnalogClockProps {
   minute: number;
   showMinutesNumbers?: boolean;
   showMinutesTicks?: boolean;
+  show12HourNumbers?: boolean;
   show24HourNumbers?: boolean;
   onChange?: (hour: number, minute: number) => void;
   startChanging?: () => void;
@@ -19,6 +20,7 @@ const AnalogClock = ({
   minute,
   showMinutesNumbers,
   showMinutesTicks,
+                       show12HourNumbers,
   show24HourNumbers,
   startChanging,
   onChange
@@ -28,6 +30,8 @@ const AnalogClock = ({
 
   const clockRef = useRef<HTMLDivElement>(null);
   const [draggingHand, setDraggingHand] = useState<'hour' | 'minute' | null>(null);
+  const previousMinuteRef = useRef<number>(minute);
+  const currentHourRef = useRef<number>(hour);
 
   // Calculate rotation angles
   // Hour hand: 30 degrees per hour + 0.5 degrees per minute
@@ -44,6 +48,8 @@ const AnalogClock = ({
   useEffect(() => {
     setMyHour(hour);
     setMyMinute(minute);
+    previousMinuteRef.current = minute;
+    currentHourRef.current = hour;
   }, [hour, minute]);
 
   // Add and remove event listeners
@@ -66,7 +72,7 @@ const AnalogClock = ({
   return (
     <div ref={clockRef} className={styles.clockContainer}>
       {/* Clock numbers */}
-      {hourNumbers.map((num) => (
+      { show12HourNumbers && hourNumbers.map((num) => (
         <div key={num} className={styles.numberHours} style={getHourNumberPosition(num)}>
           {num}
         </div>
@@ -119,6 +125,31 @@ const AnalogClock = ({
   function onStartDragging(hand: 'hour' | 'minute') {
     startChanging?.();
     setDraggingHand(hand);
+    previousMinuteRef.current = myMinute;
+    currentHourRef.current = myHour;
+  }
+
+  function updateMinuteAndCheckHourChange(newMinute: number) {
+    const prevMinute = previousMinuteRef.current;
+
+    // Detect crossing the 12 o'clock position
+    // Clockwise: from high minutes (55-59) to low minutes (0-5)
+    if (prevMinute >= 55 && newMinute <= 5) {
+      // Crossed 12 clockwise, increment hour
+      const newHour = (currentHourRef.current + 1) % 24;
+      setMyHour(newHour);
+      currentHourRef.current = newHour;
+    }
+    // Counter-clockwise: from low minutes (0-5) to high minutes (55-59)
+    else if (prevMinute <= 5 && newMinute >= 55) {
+      // Crossed 12 counter-clockwise, decrement hour
+      const newHour = (currentHourRef.current - 1 + 24) % 24;
+      setMyHour(newHour);
+      currentHourRef.current = newHour;
+    }
+
+    setMyMinute(newMinute);
+    previousMinuteRef.current = newMinute;
   }
 
   function isOutsideClockArea(clientX: number, clientY: number): boolean {
@@ -148,15 +179,17 @@ const AnalogClock = ({
     }
 
     if (draggingHand === 'minute') {
-      setMyMinute(getMinuteFromMouse(e));
+      updateMinuteAndCheckHourChange(getMinuteFromMouse(e));
     } else if (draggingHand === 'hour') {
-      setMyHour(getHourFromMouse(e));
+      const newHour = getHourFromMouse(e);
+      setMyHour(newHour);
+      currentHourRef.current = newHour;
     }
   }
 
   function handleMouseUp(e: MouseEvent) {
     if (draggingHand === 'minute') {
-      onChange?.(myHour, getMinuteFromMouse(e));
+      onChange?.(currentHourRef.current, getMinuteFromMouse(e));
     } else if (draggingHand === 'hour') {
       onChange?.(getHourFromMouse(e), myMinute);
     }
@@ -179,9 +212,11 @@ const AnalogClock = ({
     }
 
     if (draggingHand === 'minute') {
-      setMyMinute(getMinuteFromTouch(e));
+      updateMinuteAndCheckHourChange(getMinuteFromTouch(e));
     } else if (draggingHand === 'hour') {
-      setMyHour(getHourFromTouch(e));
+      const newHour = getHourFromTouch(e);
+      setMyHour(newHour);
+      currentHourRef.current = newHour;
     }
   }
 
@@ -189,7 +224,7 @@ const AnalogClock = ({
     e.preventDefault();
 
     if (draggingHand === 'minute') {
-      onChange?.(myHour, getMinuteFromTouch(e));
+      onChange?.(currentHourRef.current, getMinuteFromTouch(e));
     } else if (draggingHand === 'hour') {
       onChange?.(getHourFromTouch(e), myMinute);
     }

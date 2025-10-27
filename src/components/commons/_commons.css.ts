@@ -1,4 +1,5 @@
-import {style} from '@vanilla-extract/css';
+import {globalStyle, style} from '@vanilla-extract/css';
+import {checkboxWrapper} from "./Checkbox.css";
 
 export const viewBase = style({
   padding: 48,
@@ -18,6 +19,10 @@ export const gridRowStack = style({
   gap: 12
 });
 
-export const growRow = style({
+export const growRow = style([gridRow, {
   flexGrow: 1
-});
+}]);
+
+globalStyle(`${gridRow} ${checkboxWrapper}`, {
+  marginTop: 4
+})
