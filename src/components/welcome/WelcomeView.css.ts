@@ -9,7 +9,7 @@ export const welcomeView = style([
     flexDirection: 'column',
     gap: 40,
     alignItems: 'center',
-    width: '100%',
+    width: '100%'
   }
 ]);
 

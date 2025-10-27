@@ -20,7 +20,7 @@ const AnalogClock = ({
   minute,
   showMinutesNumbers,
   showMinutesTicks,
-                       show12HourNumbers,
+  show12HourNumbers,
   show24HourNumbers,
   startChanging,
   onChange
@@ -72,11 +72,12 @@ const AnalogClock = ({
   return (
     <div ref={clockRef} className={styles.clockContainer}>
       {/* Clock numbers */}
-      { show12HourNumbers && hourNumbers.map((num) => (
-        <div key={num} className={styles.numberHours} style={getHourNumberPosition(num)}>
-          {num}
-        </div>
-      ))}
+      {show12HourNumbers &&
+        hourNumbers.map((num) => (
+          <div key={num} className={styles.numberHours} style={getHourNumberPosition(num)}>
+            {num}
+          </div>
+        ))}
 
       {show24HourNumbers &&
         hourNumbers24.map((num) => (

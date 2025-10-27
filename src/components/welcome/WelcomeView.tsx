@@ -25,7 +25,6 @@ const WelcomeView = () => {
 
   return (
     <div className={welcomeView}>
-
       <div className={gridRow}>
         <Button onClick={onJetztClicked} primary={true}>
           Uhr auf jetzt einstellen
@@ -35,10 +34,7 @@ const WelcomeView = () => {
         </Button>
       </div>
 
-
       <div className={gridRow}>
-
-
         <AnalogClock
           hour={hour}
           minute={minute}
@@ -49,9 +45,7 @@ const WelcomeView = () => {
           startChanging={() => setTimeTextShown(false)}
           onChange={onClockNewTimeSet}
         />
-
       </div>
-
 
       <div className={gridRow}>
         <Button onClick={() => setTimeTextShown(true)} primary={true}>
@@ -59,9 +53,12 @@ const WelcomeView = () => {
         </Button>
       </div>
 
-
       <div className={timeText}>
-        <h4>{timeTextShown ? `${hour > 11 ? hour - 12 : hour}:${String(minute).padStart(2, '0')}    |  ${hour < 12 ? hour + 12 : hour}:${String(minute).padStart(2, '0')}` : '******'}</h4>
+        <h4>
+          {timeTextShown
+            ? `${hour > 11 ? hour - 12 : hour}:${String(minute).padStart(2, '0')}    |  ${hour < 12 ? hour + 12 : hour}:${String(minute).padStart(2, '0')}`
+            : '******'}
+        </h4>
         <h4>{timeTextShown ? `${timeToGerman(hour, minute)}` : '******'}</h4>
       </div>
 
@@ -72,7 +69,7 @@ const WelcomeView = () => {
           onChange={() => {
             setShowMinuteNumbers(!showMinuteNumbers);
             if (!showMinuteNumbers) {
-              setShowMinuteTicks(false)
+              setShowMinuteTicks(false);
             }
           }}
         />
@@ -82,16 +79,16 @@ const WelcomeView = () => {
           onChange={() => {
             setShowMinuteTicks(!showMinuteTicks);
             if (!showMinuteTicks) {
-              setShowMinuteNumbers(false)
+              setShowMinuteNumbers(false);
             }
           }}
         />
-        <Checkbox label="12h" value={show12HourNumbers} onChange={() => setShow12HourNumbers(!show12HourNumbers)}/>
-        <Checkbox label="24h" value={show24HourNumbers} onChange={() => setShow24HourNumbers(!show24HourNumbers)}/>
+        <Checkbox label="12h" value={show12HourNumbers} onChange={() => setShow12HourNumbers(!show12HourNumbers)} />
+        <Checkbox label="24h" value={show24HourNumbers} onChange={() => setShow24HourNumbers(!show24HourNumbers)} />
       </div>
 
       <div>
-        <BuildInfo/>
+        <BuildInfo />
       </div>
     </div>
   );

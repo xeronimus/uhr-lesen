@@ -6,5 +6,5 @@ export const app = style({
   flexDirection: 'row',
   justifyContent: 'stretch',
   height: '100%',
-  width: '100%',
+  width: '100%'
 });
