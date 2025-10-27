@@ -18,6 +18,7 @@ const WelcomeView = () => {
         minute={now.getMinutes()}
         showMinutesNumbers={showMinuteNumbers}
         show24HourNumbers={show24HourNumbers}
+        onChange={onClockNewTimeSet}
       />
 
       <div>
@@ -26,6 +27,10 @@ const WelcomeView = () => {
       </div>
     </div>
   );
+
+  function onClockNewTimeSet(hour: number, minute: number) {
+    console.log(hour, minute);
+  }
 };
 
 export default WelcomeView;

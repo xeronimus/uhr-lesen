@@ -36,17 +36,29 @@ export const hand = style({
 });
 
 export const hourHand = style({
-  width: 6,
+  width: 12,
   height: 0.26 * CLOCK_OUTER_SIZE,
   marginLeft: 0,
-  backgroundColor: vars.colors.red
+  backgroundColor: vars.colors.red,
+  ':hover': {
+    boxShadow: `0 4px 10px ${vars.colors.redHue}`
+  },
+  ':active': {
+    boxShadow: `0 4px 10px ${vars.colors.redHue}`
+  }
 });
 
 export const minuteHand = style({
-  width: 4,
+  width: 8,
   height: 0.38 * CLOCK_OUTER_SIZE,
   marginLeft: 0,
-  backgroundColor: vars.colors.blue
+  backgroundColor: vars.colors.blue,
+  ':hover': {
+    boxShadow: `0 4px 10px ${vars.colors.blueHue}`
+  },
+  ':active': {
+    boxShadow: `0 4px 10px ${vars.colors.blueHue}`
+  }
 });
 
 export const numberHours = style({

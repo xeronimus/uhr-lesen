@@ -2,8 +2,11 @@ import {createTheme, createThemeContract} from '@vanilla-extract/css';
 
 const colors = {
   fontGrey: '#363636',
+  primary: '#7800ca',
   red: '#fa5320',
-  blue: '#00a6ff'
+  redHue: 'rgba(250,83,32,0.74)',
+  blue: '#00a6ff',
+  blueHue: 'rgba(0,166,255,0.66)'
 };
 
 const constants = {
