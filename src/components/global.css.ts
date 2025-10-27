@@ -3,7 +3,11 @@ import {globalStyle} from '@vanilla-extract/css';
 import {vars} from './themes.css';
 
 globalStyle('body', {
-  fontFamily: 'Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif'
+  fontFamily: 'Candara, Calibri, Segoe, Segoe UI, Optima, Arial, sans-serif',
+  userSelect: 'none',
+  WebkitUserSelect: 'none',
+  MozUserSelect: 'none',
+  msUserSelect: 'none'
 });
 
 globalStyle('a, a:link, a:visited', {

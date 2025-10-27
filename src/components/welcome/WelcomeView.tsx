@@ -51,12 +51,12 @@ const WelcomeView = () => {
       </div>
 
       <div className={growRow}>
-        <Checkbox label="Minuten" value={showMinuteNumbers} onChange={() => setShowMinuteNumbers(!showMinuteNumbers)} />
-        <Checkbox label="24h" value={show24HourNumbers} onChange={() => setShow24HourNumbers(!show24HourNumbers)} />
+        <Checkbox label="Minuten" value={showMinuteNumbers} onChange={() => setShowMinuteNumbers(!showMinuteNumbers)}/>
+        <Checkbox label="24h" value={show24HourNumbers} onChange={() => setShow24HourNumbers(!show24HourNumbers)}/>
       </div>
 
       <div>
-        <BuildInfo />
+        <BuildInfo/>
       </div>
     </div>
   );
@@ -72,7 +72,7 @@ const WelcomeView = () => {
   }
 
   function onClockNewTimeSet(hour: number, minute: number) {
-    console.log(hour, minute);
+    console.log("new time set", hour, minute);
     setHour(hour);
     setMinute(minute);
   }

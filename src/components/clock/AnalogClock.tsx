@@ -110,8 +110,29 @@ const AnalogClock = ({
     setDraggingHand(hand);
   }
 
+  function isOutsideClockArea(clientX: number, clientY: number): boolean {
+    if (!clockRef.current) return false;
+
+    const rect = clockRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const deltaX = clientX - centerX;
+    const deltaY = clientY - centerY;
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+    // Check if distance is beyond the clock radius (including some margin)
+    const clockRadius = CLOCK_OUTER_SIZE / 2 + 20; // Add 20px margin
+    return distance > clockRadius;
+  }
+
   function handleMouseMove(e: MouseEvent) {
     if (!draggingHand) {
+      return;
+    }
+
+    if (isOutsideClockArea(e.clientX, e.clientY)) {
+      handleMouseUp(e);
       return;
     }
 
@@ -138,6 +159,13 @@ const AnalogClock = ({
     }
 
     e.preventDefault();
+
+    // Stop dragging if touch leaves clock area
+    const touch = e.touches[0];
+    if (touch && isOutsideClockArea(touch.clientX, touch.clientY)) {
+      handleTouchEnd(e);
+      return;
+    }
 
     if (draggingHand === 'minute') {
       setMyMinute(getMinuteFromTouch(e));
