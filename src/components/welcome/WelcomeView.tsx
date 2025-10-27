@@ -12,7 +12,8 @@ const WelcomeView = () => {
   const [hour, setHour] = useState<number>(new Date().getHours());
   const [minute, setMinute] = useState<number>(new Date().getMinutes());
 
-  const [showMinuteNumbers, setShowMinuteNumbers] = useState<boolean>(true);
+  const [showMinuteNumbers, setShowMinuteNumbers] = useState<boolean>(false);
+  const [showMinuteTicks, setShowMinuteTicks] = useState<boolean>(true);
   const [show24HourNumbers, setShow24HourNumbers] = useState<boolean>(false);
 
   const [timeTextShown, setTimeTextShown] = useState<boolean>(false);
@@ -28,6 +29,7 @@ const WelcomeView = () => {
           hour={hour}
           minute={minute}
           showMinutesNumbers={showMinuteNumbers}
+          showMinutesTicks={showMinuteTicks}
           show24HourNumbers={show24HourNumbers}
           startChanging={() => setTimeTextShown(false)}
           onChange={onClockNewTimeSet}
@@ -51,12 +53,27 @@ const WelcomeView = () => {
       </div>
 
       <div className={growRow}>
-        <Checkbox label="Minuten" value={showMinuteNumbers} onChange={() => setShowMinuteNumbers(!showMinuteNumbers)}/>
-        <Checkbox label="24h" value={show24HourNumbers} onChange={() => setShow24HourNumbers(!show24HourNumbers)}/>
+        <Checkbox
+          label="Minuten (zahlen)"
+          value={showMinuteNumbers}
+          onChange={() => {
+            setShowMinuteNumbers(!showMinuteNumbers);
+            setShowMinuteTicks(showMinuteNumbers);
+          }}
+        />
+        <Checkbox
+          label="Minuten"
+          value={showMinuteTicks}
+          onChange={() => {
+            setShowMinuteTicks(!showMinuteTicks);
+            setShowMinuteNumbers(showMinuteTicks);
+          }}
+        />
+        <Checkbox label="24h" value={show24HourNumbers} onChange={() => setShow24HourNumbers(!show24HourNumbers)} />
       </div>
 
       <div>
-        <BuildInfo/>
+        <BuildInfo />
       </div>
     </div>
   );
@@ -72,7 +89,7 @@ const WelcomeView = () => {
   }
 
   function onClockNewTimeSet(hour: number, minute: number) {
-    console.log("new time set", hour, minute);
+    console.log('new time set', hour, minute);
     setHour(hour);
     setMinute(minute);
   }

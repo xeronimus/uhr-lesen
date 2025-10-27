@@ -129,3 +129,10 @@ export const numberMinutes = style({
   color: '#888',
   userSelect: 'none'
 });
+export const ticksMinutes = style({
+  position: 'absolute',
+  borderLeft: '2px solid #888',
+  width: 1,
+  height: 10,
+  userSelect: 'none'
+});

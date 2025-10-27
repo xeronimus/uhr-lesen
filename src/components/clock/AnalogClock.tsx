@@ -8,19 +8,21 @@ interface AnalogClockProps {
   hour: number;
   minute: number;
   showMinutesNumbers?: boolean;
+  showMinutesTicks?: boolean;
   show24HourNumbers?: boolean;
   onChange?: (hour: number, minute: number) => void;
   startChanging?: () => void;
 }
 
 const AnalogClock = ({
-                       hour,
-                       minute,
-                       showMinutesNumbers,
-                       show24HourNumbers,
-                       startChanging,
-                       onChange
-                     }: AnalogClockProps) => {
+  hour,
+  minute,
+  showMinutesNumbers,
+  showMinutesTicks,
+  show24HourNumbers,
+  startChanging,
+  onChange
+}: AnalogClockProps) => {
   const [myHour, setMyHour] = useState<number>(hour);
   const [myMinute, setMyMinute] = useState<number>(minute);
 
@@ -84,6 +86,15 @@ const AnalogClock = ({
           </div>
         ))}
 
+      {showMinutesTicks &&
+        minuteNumbers.map((num, index) => (
+          <div
+            key={num}
+            className={styles.ticksMinutes}
+            style={{...getMinuteTicksPosition(num), transform: `rotate(${(index + 1) * 6}deg)`}}
+          ></div>
+        ))}
+
       {/* Hour hand */}
       <div
         className={styles.hourHand}
@@ -101,7 +112,7 @@ const AnalogClock = ({
       />
 
       {/* Center dot */}
-      <div className={styles.clockCenter}/>
+      <div className={styles.clockCenter} />
     </div>
   );
 
@@ -259,5 +270,14 @@ const getMinuteNumberPosition = (num: number) => {
   const center = CLOCK_OUTER_SIZE / 2;
   const x = center + radius * Math.cos(angle) - 15; // -15 to center the 30px number element
   const y = center + radius * Math.sin(angle) - 15;
+  return {left: `${x}px`, top: `${y}px`};
+};
+
+const getMinuteTicksPosition = (num: number) => {
+  const angle = ((num * 6 - 90) * Math.PI) / 180; // Convert to radians, -90 to start at 12 o'clock, 6 degrees per minute
+  const radius = CLOCK_OUTER_SIZE * 0.48; // Distance from center
+  const center = CLOCK_OUTER_SIZE / 2;
+  const x = center + radius * Math.cos(angle) - 2;
+  const y = center + radius * Math.sin(angle) - 5;
   return {left: `${x}px`, top: `${y}px`};
 };
