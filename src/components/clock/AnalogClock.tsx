@@ -14,13 +14,13 @@ interface AnalogClockProps {
 }
 
 const AnalogClock = ({
-  hour,
-  minute,
-  showMinutesNumbers,
-  show24HourNumbers,
-  startChanging,
-  onChange
-}: AnalogClockProps) => {
+                       hour,
+                       minute,
+                       showMinutesNumbers,
+                       show24HourNumbers,
+                       startChanging,
+                       onChange
+                     }: AnalogClockProps) => {
   const [myHour, setMyHour] = useState<number>(hour);
   const [myMinute, setMyMinute] = useState<number>(minute);
 
@@ -86,7 +86,7 @@ const AnalogClock = ({
 
       {/* Hour hand */}
       <div
-        className={`${styles.hand} ${styles.hourHand}`}
+        className={styles.hourHand}
         style={{transform: `translateX(-50%) rotate(${hourAngle}deg)`, cursor: 'pointer'}}
         onMouseDown={() => onStartDragging('hour')}
         onTouchStart={() => onStartDragging('hour')}
@@ -94,14 +94,14 @@ const AnalogClock = ({
 
       {/* Minute hand */}
       <div
-        className={`${styles.hand} ${styles.minuteHand}`}
+        className={styles.minuteHand}
         style={{transform: `translateX(-50%) rotate(${minuteAngle}deg)`, cursor: 'pointer'}}
         onMouseDown={() => onStartDragging('minute')}
         onTouchStart={() => onStartDragging('minute')}
       />
 
       {/* Center dot */}
-      <div className={styles.clockCenter} />
+      <div className={styles.clockCenter}/>
     </div>
   );
 
@@ -166,6 +166,7 @@ const AnalogClock = ({
     const touch = e.touches[0] || e.changedTouches[0];
     return getAngleFromPosition(touch.clientX, touch.clientY);
   }
+
   function getMinuteFromMouse(e: MouseEvent) {
     return Math.round(getAngleFromMouse(e) / 6) % 60; // Each minute is 6 degrees
   }

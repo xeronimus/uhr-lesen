@@ -1,4 +1,4 @@
-import {style} from '@vanilla-extract/css';
+import {globalStyle, style} from '@vanilla-extract/css';
 
 import {vars} from '../themes.css';
 import {CLOCK_OUTER_SIZE} from './AnalogClock';
@@ -27,40 +27,66 @@ export const clockCenter = style({
   zIndex: 10
 });
 
-export const hand = style({
+const hand = style({
   position: 'absolute',
   bottom: '50%',
   left: '50%',
   transformOrigin: 'bottom center',
-  backgroundColor: '#333',
-  borderRadius: '4px 4px 0 0',
-  touchAction: 'none'
-});
-
-export const hourHand = style({
-  width: 12,
-  height: 0.26 * CLOCK_OUTER_SIZE,
-  marginLeft: 0,
-  backgroundColor: vars.colors.red,
-  ':hover': {
-    boxShadow: `0 4px 10px ${vars.colors.redHue}`
-  },
-  ':active': {
-    boxShadow: `0 4px 10px ${vars.colors.redHue}`
+  touchAction: 'none',
+  padding: '0 20px', // Larger invisible hit box for touch
+  // Visual hand is created with ::before
+  '::before': {
+    content: '""',
+    position: 'absolute',
+    bottom: 0,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    borderRadius: '6px 6px 0 0'
   }
 });
 
-export const minuteHand = style({
-  width: 8,
-  height: 0.38 * CLOCK_OUTER_SIZE,
-  marginLeft: 0,
-  backgroundColor: vars.colors.blue,
-  ':hover': {
-    boxShadow: `0 4px 10px ${vars.colors.blueHue}`
-  },
-  ':active': {
-    boxShadow: `0 4px 10px ${vars.colors.blueHue}`
+export const hourHand = style([
+  hand,
+  {
+    width: 12,
+    height: 0.26 * CLOCK_OUTER_SIZE,
+    marginLeft: 0,
+    '::before': {
+      width: 12,
+      height: 0.26 * CLOCK_OUTER_SIZE,
+      backgroundColor: vars.colors.red
+    }
   }
+]);
+
+globalStyle(`${hourHand}:hover::before`, {
+  boxShadow: `0 4px 10px ${vars.colors.redHue}`
+});
+
+globalStyle(`${hourHand}:active::before`, {
+  boxShadow: `0 4px 10px ${vars.colors.redHue}`
+});
+
+export const minuteHand = style([
+  hand,
+  {
+    width: 8,
+    height: 0.38 * CLOCK_OUTER_SIZE,
+    marginLeft: 0,
+    '::before': {
+      width: 8,
+      height: 0.38 * CLOCK_OUTER_SIZE,
+      backgroundColor: vars.colors.blue
+    }
+  }
+]);
+
+globalStyle(`${minuteHand}:hover::before`, {
+  boxShadow: `0 4px 10px ${vars.colors.blueHue}`
+});
+
+globalStyle(`${minuteHand}:active::before`, {
+  boxShadow: `0 4px 10px ${vars.colors.blueHue}`
 });
 
 export const numberHours = style({
