@@ -5,3 +5,9 @@ export const viewBase = style({
   overflowX: 'auto',
   overflowY: 'auto'
 });
+export const gridRow = style({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: 12,
+});

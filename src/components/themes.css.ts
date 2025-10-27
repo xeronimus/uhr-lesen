@@ -2,7 +2,8 @@ import {createTheme, createThemeContract} from '@vanilla-extract/css';
 
 const colors = {
   fontGrey: '#363636',
-  primary: '#7800ca',
+  primary: '#a41fff',
+  primaryHue: '#a41fff',
   red: '#fa5320',
   redHue: 'rgba(250,83,32,0.74)',
   blue: '#00a6ff',
