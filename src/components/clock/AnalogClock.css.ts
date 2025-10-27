@@ -11,7 +11,8 @@ export const clockContainer = style({
   border: '8px solid #333',
   borderRadius: '50%',
   backgroundColor: '#fff',
-  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)'
+  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+  touchAction: 'none'
 });
 
 export const clockCenter = style({
@@ -32,7 +33,8 @@ export const hand = style({
   left: '50%',
   transformOrigin: 'bottom center',
   backgroundColor: '#333',
-  borderRadius: '4px 4px 0 0'
+  borderRadius: '4px 4px 0 0',
+  touchAction: 'none'
 });
 
 export const hourHand = style({

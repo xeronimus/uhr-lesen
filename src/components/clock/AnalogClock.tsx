@@ -7,7 +7,6 @@ export const CLOCK_OUTER_SIZE = 400;
 interface AnalogClockProps {
   hour: number;
   minute: number;
-
   showMinutesNumbers?: boolean;
   show24HourNumbers?: boolean;
   onChange?: (hour: number, minute: number) => void;
@@ -50,10 +49,14 @@ const AnalogClock = ({
     if (draggingHand && clockRef.current) {
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
+      window.addEventListener('touchmove', handleTouchMove, {passive: false});
+      window.addEventListener('touchend', handleTouchEnd, {passive: false});
 
       return () => {
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
+        window.removeEventListener('touchmove', handleTouchMove);
+        window.removeEventListener('touchend', handleTouchEnd);
       };
     }
   }, [draggingHand, hour, minute, onChange]);
@@ -86,6 +89,7 @@ const AnalogClock = ({
         className={`${styles.hand} ${styles.hourHand}`}
         style={{transform: `translateX(-50%) rotate(${hourAngle}deg)`, cursor: 'pointer'}}
         onMouseDown={() => onStartDragging('hour')}
+        onTouchStart={() => onStartDragging('hour')}
       />
 
       {/* Minute hand */}
@@ -93,6 +97,7 @@ const AnalogClock = ({
         className={`${styles.hand} ${styles.minuteHand}`}
         style={{transform: `translateX(-50%) rotate(${minuteAngle}deg)`, cursor: 'pointer'}}
         onMouseDown={() => onStartDragging('minute')}
+        onTouchStart={() => onStartDragging('minute')}
       />
 
       {/* Center dot */}
@@ -103,33 +108,6 @@ const AnalogClock = ({
   function onStartDragging(hand: 'hour' | 'minute') {
     startChanging?.();
     setDraggingHand(hand);
-  }
-
-  function getAngleFromMouse(e: MouseEvent): number {
-    if (!clockRef.current) return 0;
-
-    const rect = clockRef.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    const deltaX = e.clientX - centerX;
-    const deltaY = e.clientY - centerY;
-
-    // Calculate angle in degrees (0 is at 3 o'clock, going counter-clockwise)
-    let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-    // Convert to 12 o'clock = 0, going clockwise
-    angle = angle + 90;
-    if (angle < 0) angle += 360;
-
-    return angle;
-  }
-
-  function getMinuteFromMouse(e: MouseEvent) {
-    return Math.round(getAngleFromMouse(e) / 6) % 60; // Each minute is 6 degrees
-  }
-
-  function getHourFromMouse(e: MouseEvent) {
-    return Math.round(getAngleFromMouse(e) / 30) % 12; // Each hour is 30 degrees
   }
 
   function handleMouseMove(e: MouseEvent) {
@@ -152,6 +130,77 @@ const AnalogClock = ({
     }
 
     setDraggingHand(null);
+  }
+
+  function handleTouchMove(e: TouchEvent) {
+    if (!draggingHand) {
+      return;
+    }
+
+    e.preventDefault();
+
+    if (draggingHand === 'minute') {
+      setMyMinute(getMinuteFromTouch(e));
+    } else if (draggingHand === 'hour') {
+      setMyHour(getHourFromTouch(e));
+    }
+  }
+
+  function handleTouchEnd(e: TouchEvent) {
+    e.preventDefault();
+
+    if (draggingHand === 'minute') {
+      onChange?.(myHour, getMinuteFromTouch(e));
+    } else if (draggingHand === 'hour') {
+      onChange?.(getHourFromTouch(e), myMinute);
+    }
+
+    setDraggingHand(null);
+  }
+
+  function getAngleFromMouse(e: MouseEvent): number {
+    return getAngleFromPosition(e.clientX, e.clientY);
+  }
+
+  function getAngleFromTouch(e: TouchEvent): number {
+    const touch = e.touches[0] || e.changedTouches[0];
+    return getAngleFromPosition(touch.clientX, touch.clientY);
+  }
+  function getMinuteFromMouse(e: MouseEvent) {
+    return Math.round(getAngleFromMouse(e) / 6) % 60; // Each minute is 6 degrees
+  }
+
+  function getHourFromMouse(e: MouseEvent) {
+    return Math.round(getAngleFromMouse(e) / 30) % 12; // Each hour is 30 degrees
+  }
+
+  function getMinuteFromTouch(e: TouchEvent) {
+    return Math.round(getAngleFromTouch(e) / 6) % 60; // Each minute is 6 degrees
+  }
+
+  function getHourFromTouch(e: TouchEvent) {
+    return Math.round(getAngleFromTouch(e) / 30) % 12; // Each hour is 30 degrees
+  }
+
+  function getAngleFromPosition(clientX: number, clientY: number): number {
+    if (!clockRef.current) {
+      return 0;
+    }
+
+    const rect = clockRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const deltaX = clientX - centerX;
+    const deltaY = clientY - centerY;
+
+    // Calculate angle in degrees (0 is at 3 o'clock, going counter-clockwise)
+    let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+    // Convert to 12 o'clock = 0, going clockwise
+    angle = angle + 90;
+    if (angle < 0) angle += 360;
+
+    return angle;
   }
 };
 
