@@ -1,4 +1,4 @@
-﻿export interface UserState {}
+export interface UserState {}
 
 export const getDefaultUserState = (): UserState => {
   return {};

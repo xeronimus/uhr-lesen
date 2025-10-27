@@ -1,4 +1,4 @@
-﻿import {style} from '@vanilla-extract/css';
+import {style} from '@vanilla-extract/css';
 
 export const viewBase = style({
   padding: 48,
@@ -9,5 +9,5 @@ export const gridRow = style({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
-  gap: 12,
+  gap: 12
 });

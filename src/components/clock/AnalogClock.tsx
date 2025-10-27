@@ -11,9 +11,17 @@ interface AnalogClockProps {
   showMinutesNumbers?: boolean;
   show24HourNumbers?: boolean;
   onChange?: (hour: number, minute: number) => void;
+  startChanging?: () => void;
 }
 
-const AnalogClock = ({hour, minute, showMinutesNumbers, show24HourNumbers, onChange}: AnalogClockProps) => {
+const AnalogClock = ({
+  hour,
+  minute,
+  showMinutesNumbers,
+  show24HourNumbers,
+  startChanging,
+  onChange
+}: AnalogClockProps) => {
   const [myHour, setMyHour] = useState<number>(hour);
   const [myMinute, setMyMinute] = useState<number>(minute);
 
@@ -77,20 +85,25 @@ const AnalogClock = ({hour, minute, showMinutesNumbers, show24HourNumbers, onCha
       <div
         className={`${styles.hand} ${styles.hourHand}`}
         style={{transform: `translateX(-50%) rotate(${hourAngle}deg)`, cursor: 'pointer'}}
-        onMouseDown={() => setDraggingHand('hour')}
+        onMouseDown={() => onStartDragging('hour')}
       />
 
       {/* Minute hand */}
       <div
         className={`${styles.hand} ${styles.minuteHand}`}
         style={{transform: `translateX(-50%) rotate(${minuteAngle}deg)`, cursor: 'pointer'}}
-        onMouseDown={() => setDraggingHand('minute')}
+        onMouseDown={() => onStartDragging('minute')}
       />
 
       {/* Center dot */}
       <div className={styles.clockCenter} />
     </div>
   );
+
+  function onStartDragging(hand: 'hour' | 'minute') {
+    startChanging?.();
+    setDraggingHand(hand);
+  }
 
   function getAngleFromMouse(e: MouseEvent): number {
     if (!clockRef.current) return 0;
