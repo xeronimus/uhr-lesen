@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 
 import * as styles from './AnalogClock.css';
 
-export const CLOCK_OUTER_SIZE = 600;
+const CLOCK_OUTER_SIZE = 200;
 
 interface AnalogClockProps {
   hour: number;
@@ -32,7 +32,7 @@ const AnalogClock = ({
   const [draggingHand, setDraggingHand] = useState<'hour' | 'minute' | null>(null);
   const previousMinuteRef = useRef<number>(minute);
   const currentHourRef = useRef<number>(hour);
-  const [scale, setScale] = useState<number>(1);
+  const [clockSize, setClockSize] = useState<number>(CLOCK_OUTER_SIZE);
 
   // Calculate rotation angles
   // Hour hand: 30 degrees per hour + 0.5 degrees per minute
@@ -70,55 +70,47 @@ const AnalogClock = ({
     }
   }, [draggingHand, hour, minute, onChange]);
 
-  // Calculate scale factor based on viewport dimensions
+  // Measure the container size dynamically
   useEffect(() => {
-    const updateScale = () => {
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      const minDimension = Math.min(viewportWidth, viewportHeight);
+    if (!clockRef.current) return;
 
-      // Use 90% of the smallest viewport dimension, but never scale up beyond 1
-      const maxSize = minDimension * 0.9;
-      const newScale = Math.min(1, maxSize / CLOCK_OUTER_SIZE);
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const {width} = entry.contentRect;
+        setClockSize(width);
+      }
+    });
 
-      setScale(newScale);
-    };
+    resizeObserver.observe(clockRef.current);
 
-    updateScale();
-    window.addEventListener('resize', updateScale);
+    // Initial measurement
+    setClockSize(clockRef.current.offsetWidth);
 
     return () => {
-      window.removeEventListener('resize', updateScale);
+      resizeObserver.disconnect();
     };
   }, []);
 
   return (
-    <div
-      ref={clockRef}
-      className={styles.clockContainer}
-      style={{
-        transform: `scale(${scale})`,
-        transformOrigin: 'center center'
-      }}
-    >
+    <div ref={clockRef} className={styles.clockContainer}>
       {/* Clock numbers */}
       {show12HourNumbers &&
         hourNumbers.map((num) => (
-          <div key={num} className={styles.numberHours} style={getHourNumberPosition(num)}>
+          <div key={num} className={styles.numberHours} style={getHourNumberPosition(num, clockSize)}>
             {num}
           </div>
         ))}
 
       {show24HourNumbers &&
         hourNumbers24.map((num) => (
-          <div key={num} className={styles.numberHours24} style={get24HourNumberPosition(num)}>
+          <div key={num} className={styles.numberHours24} style={get24HourNumberPosition(num, clockSize)}>
             {num}
           </div>
         ))}
 
       {showMinutesNumbers &&
         minuteNumbers.map((num) => (
-          <div key={num} className={styles.numberMinutes} style={getMinuteNumberPosition(num)}>
+          <div key={num} className={styles.numberMinutes} style={getMinuteNumberPosition(num, clockSize)}>
             {num}
           </div>
         ))}
@@ -128,7 +120,7 @@ const AnalogClock = ({
           <div
             key={num}
             className={styles.ticksMinutes}
-            style={{...getMinuteTicksPosition(num), transform: `rotate(${(index + 1) * 6}deg)`}}
+            style={{...getMinuteTicksPosition(num, clockSize), transform: `rotate(${(index + 1) * 6}deg)`}}
           ></div>
         ))}
 
@@ -195,8 +187,7 @@ const AnalogClock = ({
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
     // Check if distance is beyond the clock radius (including some margin)
-    // Account for scale factor
-    const clockRadius = (CLOCK_OUTER_SIZE / 2 + 20) * scale; // Add 20px margin, multiply by scale
+    const clockRadius = clockSize / 2 + 20; // Add 20px margin
     return distance > clockRadius;
   }
 
@@ -313,37 +304,37 @@ const AnalogClock = ({
 
 export default AnalogClock;
 
-const getHourNumberPosition = (num: number) => {
+const getHourNumberPosition = (num: number, size: number) => {
   const angle = ((num * 30 - 90) * Math.PI) / 180; // Convert to radians, -90 to start at 12 o'clock
-  const radius = CLOCK_OUTER_SIZE * 0.42; // Distance from center
-  const center = CLOCK_OUTER_SIZE / 2;
+  const radius = size * 0.42; // Distance from center
+  const center = size / 2;
   const x = center + radius * Math.cos(angle) - 15; // -15 to center the 30px number element
   const y = center + radius * Math.sin(angle) - 15;
   return {left: `${x}px`, top: `${y}px`};
 };
 
-const get24HourNumberPosition = (num: number) => {
+const get24HourNumberPosition = (num: number, size: number) => {
   const angle = (((num - 12) * 30 - 90) * Math.PI) / 180; // Convert to radians, -90 to start at 12 o'clock
-  const radius = CLOCK_OUTER_SIZE * 0.32; // Distance from center
-  const center = CLOCK_OUTER_SIZE / 2;
+  const radius = size * 0.32; // Distance from center
+  const center = size / 2;
   const x = center + radius * Math.cos(angle) - 15; // -15 to center the 30px number element
   const y = center + radius * Math.sin(angle) - 15;
   return {left: `${x}px`, top: `${y}px`};
 };
 
-const getMinuteNumberPosition = (num: number) => {
+const getMinuteNumberPosition = (num: number, size: number) => {
   const angle = ((num * 6 - 90) * Math.PI) / 180; // Convert to radians, -90 to start at 12 o'clock, 6 degrees per minute
-  const radius = CLOCK_OUTER_SIZE * 0.469; // Distance from center
-  const center = CLOCK_OUTER_SIZE / 2;
+  const radius = size * 0.469; // Distance from center
+  const center = size / 2;
   const x = center + radius * Math.cos(angle) - 15; // -15 to center the 30px number element
   const y = center + radius * Math.sin(angle) - 15;
   return {left: `${x}px`, top: `${y}px`};
 };
 
-const getMinuteTicksPosition = (num: number) => {
+const getMinuteTicksPosition = (num: number, size: number) => {
   const angle = ((num * 6 - 90) * Math.PI) / 180; // Convert to radians, -90 to start at 12 o'clock, 6 degrees per minute
-  const radius = CLOCK_OUTER_SIZE * 0.48; // Distance from center
-  const center = CLOCK_OUTER_SIZE / 2;
+  const radius = size * 0.48; // Distance from center
+  const center = size / 2;
   const x = center + radius * Math.cos(angle) - 2;
   const y = center + radius * Math.sin(angle) - 5;
   return {left: `${x}px`, top: `${y}px`};

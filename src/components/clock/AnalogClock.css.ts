@@ -1,13 +1,13 @@
 import {globalStyle, style} from '@vanilla-extract/css';
 
 import {vars} from '../themes.css';
-import {CLOCK_OUTER_SIZE} from './AnalogClock';
 
 export const clockContainer = style({
   display: 'inline-block',
   position: 'relative',
-  width: CLOCK_OUTER_SIZE,
-  height: CLOCK_OUTER_SIZE,
+  width: '100%',
+  height: '100%',
+  aspectRatio: '1 / 1',
   border: '8px solid #333',
   borderRadius: '50%',
   backgroundColor: '#fff',
@@ -19,8 +19,8 @@ export const clockCenter = style({
   position: 'absolute',
   top: '50%',
   left: '50%',
-  width: CLOCK_OUTER_SIZE / 20,
-  height: CLOCK_OUTER_SIZE / 20,
+  width: '5%', // 1/20 = 5%
+  height: '5%',
   backgroundColor: '#333',
   borderRadius: '50%',
   transform: 'translate(-50%, -50%)',
@@ -49,11 +49,11 @@ export const hourHand = style([
   hand,
   {
     width: 12,
-    height: 0.26 * CLOCK_OUTER_SIZE,
+    height: '26%',
     marginLeft: 0,
     '::before': {
       width: 12,
-      height: 0.26 * CLOCK_OUTER_SIZE,
+      height: '100%',
       backgroundColor: vars.colors.red
     }
   }
@@ -71,11 +71,11 @@ export const minuteHand = style([
   hand,
   {
     width: 8,
-    height: 0.38 * CLOCK_OUTER_SIZE,
+    height: '38%',
     marginLeft: 0,
     '::before': {
       width: 8,
-      height: 0.38 * CLOCK_OUTER_SIZE,
+      height: '100%',
       backgroundColor: vars.colors.blue
     }
   }

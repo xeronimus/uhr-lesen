@@ -35,16 +35,18 @@ const WelcomeView = () => {
       </div>
 
       <div className={gridRow}>
-        <AnalogClock
-          hour={hour}
-          minute={minute}
-          showMinutesNumbers={showMinuteNumbers}
-          showMinutesTicks={showMinuteTicks}
-          show12HourNumbers={show12HourNumbers}
-          show24HourNumbers={show24HourNumbers}
-          startChanging={() => setTimeTextShown(false)}
-          onChange={onClockNewTimeSet}
-        />
+        <div style={{width: '90vmin', aspectRatio: '1 / 1'}}>
+          <AnalogClock
+            hour={hour}
+            minute={minute}
+            showMinutesNumbers={showMinuteNumbers}
+            showMinutesTicks={showMinuteTicks}
+            show12HourNumbers={show12HourNumbers}
+            show24HourNumbers={show24HourNumbers}
+            startChanging={() => setTimeTextShown(false)}
+            onChange={onClockNewTimeSet}
+          />
+        </div>
       </div>
 
       <div className={gridRow}>
