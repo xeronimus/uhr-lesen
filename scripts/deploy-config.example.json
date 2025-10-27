@@ -1,0 +1,11 @@
+{
+  "host": "your-server.com",
+  "port": 21,
+  "username": "your-username",
+  "password": "your-password",
+  "secure": true,
+  "rejectUnauthorized": true,
+  "remotePath": "/path/to/web/root",
+  "include": [],
+  "exclude": []
+}
