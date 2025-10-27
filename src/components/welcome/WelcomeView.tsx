@@ -27,10 +27,10 @@ const WelcomeView = () => {
     <div className={welcomeView}>
       <div className={gridRow}>
         <Button onClick={onJetztClicked} primary={true}>
-          Uhr auf jetzt einstellen
+          <i className="icon icon-clock" /> Jetzt
         </Button>
         <Button onClick={onRandomClicked} primary={true}>
-          Uhr auf zufällige Zeit einstellen
+          <i className="icon icon-arrows-ccw" /> Zufällig
         </Button>
       </div>
 
@@ -49,22 +49,24 @@ const WelcomeView = () => {
 
       <div className={gridRow}>
         <Button onClick={() => setTimeTextShown(true)} primary={true}>
-          Zeit als Text anzeigen
+          <i className="icon icon-eye" /> Zeit als Text anzeigen
         </Button>
       </div>
 
       <div className={timeText}>
         <h4>
-          {timeTextShown
-            ? `${hour > 11 ? hour - 12 : hour}:${String(minute).padStart(2, '0')}    |  ${hour < 12 ? hour + 12 : hour}:${String(minute).padStart(2, '0')}`
-            : '******'}
+          {timeTextShown ? (
+            `${hour > 11 ? hour - 12 : hour}:${String(minute).padStart(2, '0')}    |  ${hour < 12 ? hour + 12 : hour}:${String(minute).padStart(2, '0')}`
+          ) : (
+            <i className="icon icon-star" />
+          )}
         </h4>
-        <h4>{timeTextShown ? `${timeToGerman(hour, minute)}` : '******'}</h4>
+        <h4>{timeTextShown ? `${timeToGerman(hour, minute)}` : <i className="icon icon-star" />}</h4>
       </div>
 
-      <div className={growRow}>
+      <div className={gridRow}>
         <Checkbox
-          label="Minuten (zahlen)"
+          label="Minuten"
           value={showMinuteNumbers}
           onChange={() => {
             setShowMinuteNumbers(!showMinuteNumbers);
@@ -74,7 +76,7 @@ const WelcomeView = () => {
           }}
         />
         <Checkbox
-          label="Minuten"
+          label="Minuten-Ticks"
           value={showMinuteTicks}
           onChange={() => {
             setShowMinuteTicks(!showMinuteTicks);
@@ -83,6 +85,8 @@ const WelcomeView = () => {
             }
           }}
         />
+      </div>
+      <div className={growRow}>
         <Checkbox label="12h" value={show12HourNumbers} onChange={() => setShow12HourNumbers(!show12HourNumbers)} />
         <Checkbox label="24h" value={show24HourNumbers} onChange={() => setShow24HourNumbers(!show24HourNumbers)} />
       </div>

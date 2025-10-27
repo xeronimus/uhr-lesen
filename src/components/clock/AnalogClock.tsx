@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 
 import * as styles from './AnalogClock.css';
 
-export const CLOCK_OUTER_SIZE = 400;
+export const CLOCK_OUTER_SIZE = 600;
 
 interface AnalogClockProps {
   hour: number;
@@ -32,6 +32,7 @@ const AnalogClock = ({
   const [draggingHand, setDraggingHand] = useState<'hour' | 'minute' | null>(null);
   const previousMinuteRef = useRef<number>(minute);
   const currentHourRef = useRef<number>(hour);
+  const [scale, setScale] = useState<number>(1);
 
   // Calculate rotation angles
   // Hour hand: 30 degrees per hour + 0.5 degrees per minute
@@ -69,8 +70,37 @@ const AnalogClock = ({
     }
   }, [draggingHand, hour, minute, onChange]);
 
+  // Calculate scale factor based on viewport dimensions
+  useEffect(() => {
+    const updateScale = () => {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const minDimension = Math.min(viewportWidth, viewportHeight);
+
+      // Use 90% of the smallest viewport dimension, but never scale up beyond 1
+      const maxSize = minDimension * 0.9;
+      const newScale = Math.min(1, maxSize / CLOCK_OUTER_SIZE);
+
+      setScale(newScale);
+    };
+
+    updateScale();
+    window.addEventListener('resize', updateScale);
+
+    return () => {
+      window.removeEventListener('resize', updateScale);
+    };
+  }, []);
+
   return (
-    <div ref={clockRef} className={styles.clockContainer}>
+    <div
+      ref={clockRef}
+      className={styles.clockContainer}
+      style={{
+        transform: `scale(${scale})`,
+        transformOrigin: 'center center'
+      }}
+    >
       {/* Clock numbers */}
       {show12HourNumbers &&
         hourNumbers.map((num) => (
@@ -165,7 +195,8 @@ const AnalogClock = ({
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
     // Check if distance is beyond the clock radius (including some margin)
-    const clockRadius = CLOCK_OUTER_SIZE / 2 + 20; // Add 20px margin
+    // Account for scale factor
+    const clockRadius = (CLOCK_OUTER_SIZE / 2 + 20) * scale; // Add 20px margin, multiply by scale
     return distance > clockRadius;
   }
 

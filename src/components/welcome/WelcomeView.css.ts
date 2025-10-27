@@ -7,7 +7,7 @@ export const welcomeView = style([
   {
     display: 'flex',
     flexDirection: 'column',
-    gap: 40,
+    gap: 12,
     alignItems: 'center',
     width: '100%'
   }
