@@ -84,27 +84,3 @@ body ::-webkit-scrollbar-thumb:vertical:hover
     boxShadow: 'none'
   }
 );
-
-// -- google map info window and marker clusters
-
-globalStyle(`.gm-style-iw-chr .gm-style-iw-ch + button`, {
-  display: 'none',
-  visibility: 'hidden'
-});
-
-globalStyle(`.gm-style-iw.gm-style-iw-c:focus-visible`, {
-  outline: 'none !important'
-});
-
-globalStyle('.myl-map-marker-cluster', {
-  border: '3px solid transparent',
-  borderRadius: '50%',
-  background: 'white',
-  display: 'flex',
-  minWidth: 24,
-  minHeight: 24,
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  position: 'relative'
-});
