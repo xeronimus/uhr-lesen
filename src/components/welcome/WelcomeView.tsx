@@ -49,7 +49,8 @@ const WelcomeView = () => {
       </div>
 
       <div className={timeText}>
-        <h4>{timeTextShown ? timeToGerman(hour, minute) : '******'}</h4>
+        <h4>{timeTextShown ? `${hour > 11 ? hour - 12 : hour}:${String(minute).padStart(2, '0')}` : '******'}</h4>
+        <h4>{timeTextShown ? `${timeToGerman(hour, minute)}` : '******'}</h4>
       </div>
 
       <div className={growRow}>

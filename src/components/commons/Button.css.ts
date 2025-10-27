@@ -3,6 +3,7 @@ import {globalStyle, style, styleVariants} from '@vanilla-extract/css';
 import {vars} from '../themes.css';
 
 const buttonBase = style({
+  fontSize: '120%',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
