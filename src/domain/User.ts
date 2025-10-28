@@ -3,11 +3,13 @@
 export default interface User {
   id: string;
   name: string;
+  totalPoints: number;
 }
 
 export function createNewUser(name: string): User {
   return {
     id: uuid(),
-    name
+    name,
+    totalPoints: 0
   };
 }

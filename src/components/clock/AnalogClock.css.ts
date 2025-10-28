@@ -3,6 +3,7 @@ import {globalStyle, style} from '@vanilla-extract/css';
 import {vars} from '../themes.css';
 
 export const clockContainer = style({
+  boxSizing: 'border-box',
   display: 'inline-block',
   position: 'relative',
   width: '100%',

@@ -3,9 +3,14 @@ import {globalStyle, style} from '@vanilla-extract/css';
 import {checkboxWrapper} from './Checkbox.css';
 
 export const viewBase = style({
-  padding: 12,
-  overflowX: 'auto',
-  overflowY: 'auto'
+  overflowX: 'hidden',
+  overflowY: 'auto',
+  marginTop: 8,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 12,
+  alignItems: 'center',
+  width: '100%'
 });
 export const gridRow = style({
   display: 'flex',

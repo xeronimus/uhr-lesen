@@ -10,21 +10,26 @@ globalStyle('body', {
   msUserSelect: 'none'
 });
 
-globalStyle('a, a:link, a:visited', {
-  color: vars.colors.primary,
-  textDecoration: 'none'
-});
-
-globalStyle('a:hover', {
-  textDecoration: 'underline'
-});
-
 globalStyle('#root', {
   position: 'fixed',
   top: 0,
   left: 0,
   right: 0,
   bottom: 0
+});
+
+// -- forms and input elements
+
+globalStyle('input[type=text]', {
+  padding: '4px 8px',
+  outline: 'none',
+  border: `2px solid ${vars.colors.fontGrey}`,
+  borderRadius: 20,
+  textAlign: 'center'
+});
+
+globalStyle('input[type=text]:active, input[type=text]:focus', {
+  border: `2px solid ${vars.colors.primary}`
 });
 
 // -- customize browser scrollbars

@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState} from 'react';
 
+import AnalogClockConfig from '../../domain/AnalogClockConfig';
 import * as styles from './AnalogClock.css';
 
 const CLOCK_OUTER_SIZE = 200;
@@ -7,24 +8,12 @@ const CLOCK_OUTER_SIZE = 200;
 interface AnalogClockProps {
   hour: number;
   minute: number;
-  showMinutesNumbers?: boolean;
-  showMinutesTicks?: boolean;
-  show12HourNumbers?: boolean;
-  show24HourNumbers?: boolean;
+  config: AnalogClockConfig;
   onChange?: (hour: number, minute: number) => void;
   startChanging?: () => void;
 }
 
-const AnalogClock = ({
-  hour,
-  minute,
-  showMinutesNumbers,
-  showMinutesTicks,
-  show12HourNumbers,
-  show24HourNumbers,
-  startChanging,
-  onChange
-}: AnalogClockProps) => {
+const AnalogClock = ({hour, minute, config, startChanging, onChange}: AnalogClockProps) => {
   const [myHour, setMyHour] = useState<number>(hour);
   const [myMinute, setMyMinute] = useState<number>(minute);
 
@@ -94,28 +83,28 @@ const AnalogClock = ({
   return (
     <div ref={clockRef} className={styles.clockContainer}>
       {/* Clock numbers */}
-      {show12HourNumbers &&
+      {config.show12HourNumbers &&
         hourNumbers.map((num) => (
           <div key={num} className={styles.numberHours} style={getHourNumberPosition(num, clockSize)}>
             {num}
           </div>
         ))}
 
-      {show24HourNumbers &&
+      {config.show24HourNumbers &&
         hourNumbers24.map((num) => (
           <div key={num} className={styles.numberHours24} style={get24HourNumberPosition(num, clockSize)}>
             {num}
           </div>
         ))}
 
-      {showMinutesNumbers &&
+      {config.showMinuteNumbers &&
         minuteNumbers.map((num) => (
           <div key={num} className={styles.numberMinutes} style={getMinuteNumberPosition(num, clockSize)}>
             {num}
           </div>
         ))}
 
-      {showMinutesTicks &&
+      {config.showMinuteTicks &&
         minuteNumbers.map((num, index) => (
           <div
             key={num}

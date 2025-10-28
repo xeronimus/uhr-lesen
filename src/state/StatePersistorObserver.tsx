@@ -11,25 +11,23 @@ import usePrevious from './usePrevious';
  *
  */
 export default function StatePersistorObserver() {
-  const user = useAppStore((state) => state.user);
-  const prevUser = usePrevious(user);
+  const state = useAppStore((state) => state);
+  const prevState = usePrevious(state);
 
   const persistState = useCallback(() => {
-    const userChanged = user && user !== prevUser;
+    const stateChanged = state && state !== prevState;
 
-    if (userChanged) {
-      logger.debug(`StatePersistorObserver: userChanged=${userChanged} `);
-
+    if (stateChanged) {
       setTimeout(async () => {
         try {
-          logger.debug(`saving state ${user.id} ${user.name}`);
-          await LocalStorageStatePersistorService.persistState({user});
+          logger.debug(`StatePersistorObserver saving state`, state);
+          await LocalStorageStatePersistorService.persistState(state);
         } catch (e: any) {
           logger.error(e);
         }
       }, 1);
     }
-  }, [user, prevUser]);
+  }, [state, prevState]);
 
   useEffect(() => void persistState(), [persistState]);
 
