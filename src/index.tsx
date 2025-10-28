@@ -5,11 +5,13 @@ import App from './components/App';
 import './components/global.css';
 import './resources/font/css/animation.css';
 import './resources/font/css/uhr-lesen.css';
+import StatePersistorObserver from './state/StatePersistorObserver';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
   <>
+    <StatePersistorObserver />
     <App />
   </>
 );
