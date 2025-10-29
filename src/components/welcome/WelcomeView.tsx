@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 
-import getRandomInt from '../../data/getRandomInt';
+import {getRandomHour12, getRandomMinute} from '../../data/getRandomTimes';
 import {timeToGerman} from '../../data/timeToGerman';
 import {useAppStore} from '../../state/store';
 import AnalogClock from '../clock/AnalogClock';
@@ -126,12 +126,11 @@ const WelcomeView = () => {
   }
 
   function onRandomClicked() {
-    setHour(getRandomInt(1, 13));
-    setMinute(getRandomInt(0, 60));
+    setHour(getRandomHour12());
+    setMinute(getRandomMinute());
   }
 
   function onClockNewTimeSet(hour: number, minute: number) {
-    console.log('new time set', hour, minute);
     setHour(hour);
     setMinute(minute);
   }

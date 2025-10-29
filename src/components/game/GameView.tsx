@@ -3,6 +3,7 @@
 import {getMatchingLevelForPoints} from '../../data/levels';
 import {addWordsLc, hourNamesLc, minuteNamesLc, timeToGerman} from '../../data/timeToGerman';
 import Level from '../../domain/Level';
+import envConfig from '../../envConfig';
 import {useAppStore} from '../../state/store';
 import {selectUserOrThrow} from '../../state/user/userSelectors';
 import AnalogClock from '../clock/AnalogClock';
@@ -58,6 +59,7 @@ const GameView = () => {
         </div>
       </div>
 
+      <div className={cStyles.gridRow}>{hour >= 12 && <span className={styles.hintText}>Nachmittag / Abend</span>}</div>
       <div className={cStyles.gridRow}>
         <DraggablePills words={availableWords} onChange={onPillsDragged} />
       </div>
@@ -65,6 +67,12 @@ const GameView = () => {
         <Button onClick={onCheckClicked} primary={true}>
           Prüfen
         </Button>
+
+        {envConfig.isDev && (
+          <span>
+            {hour}:{minute}
+          </span>
+        )}
       </div>
 
       <MainMenu />
@@ -115,20 +123,18 @@ export default GameView;
  */
 function getAvailableWords(solutionString: string): string[] {
   const mustBeInThere = solutionString.split(' ');
-  const additionalWords = uniqueStringArray([
+  const all = uniqueStringArray([
+    ...mustBeInThere,
     ...pickRandom(minuteNamesLc, 2),
     ...pickRandom(hourNamesLc, 2),
-    ...pickRandom(addWordsLc, 2)
+    ...pickRandom(addWordsLc, 2),
+    'nach',
+    'vor'
   ]);
 
-  if (!mustBeInThere.includes('nach')) {
-    additionalWords.push('nach');
-  }
-  if (!mustBeInThere.includes('vor')) {
-    additionalWords.push('vor');
-  }
-
-  return shuffleArray([...additionalWords, ...mustBeInThere]).filter((s) => !!s);
+  return shuffleArray(all)
+    .filter((s) => !!s)
+    .map((w) => w.toLowerCase());
 }
 
 function uniqueStringArray(arr: string[]) {

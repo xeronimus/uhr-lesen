@@ -3,7 +3,7 @@ import {describe, expect, it} from 'vitest';
 import {timeToGerman} from './timeToGerman';
 
 describe('timeToGerman', () => {
-  describe('exact hours', () => {
+  describe('exact hours (morning 0-12)', () => {
     it('should convert midnight (0:00) to "Zwölf Uhr"', () => {
       expect(timeToGerman(0, 0)).toBe('Zwölf Uhr');
     });
@@ -19,13 +19,19 @@ describe('timeToGerman', () => {
     it('should convert noon (12:00) to "Zwölf Uhr"', () => {
       expect(timeToGerman(12, 0)).toBe('Zwölf Uhr');
     });
+  });
 
-    it('should convert 13:00 to "Ein Uhr"', () => {
-      expect(timeToGerman(13, 0)).toBe('Ein Uhr');
+  describe('exact hours (afternoon/evening 12-23) - 24-hour format', () => {
+    it('should convert 13:00 to "Dreizehn Uhr"', () => {
+      expect(timeToGerman(13, 0)).toBe('Dreizehn Uhr');
     });
 
-    it('should convert 23:00 to "Elf Uhr"', () => {
-      expect(timeToGerman(23, 0)).toBe('Elf Uhr');
+    it('should convert 17:00 to "Siebzehn Uhr"', () => {
+      expect(timeToGerman(17, 0)).toBe('Siebzehn Uhr');
+    });
+
+    it('should convert 23:00 to "Dreiundzwanzig Uhr"', () => {
+      expect(timeToGerman(23, 0)).toBe('Dreiundzwanzig Uhr');
     });
   });
 
@@ -39,7 +45,11 @@ describe('timeToGerman', () => {
     });
 
     it('should convert 12:15 to "Viertel nach zwölf"', () => {
-      expect(timeToGerman(12, 15)).toBe('Viertel nach zwölf');
+      expect(timeToGerman(12, 15)).toBe('Zwölf Uhr fünfzehn');
+    });
+
+    it('should convert 0:15 to "Viertel nach zwölf"', () => {
+      expect(timeToGerman(0, 15)).toBe('Viertel nach zwölf');
     });
   });
 
@@ -54,10 +64,6 @@ describe('timeToGerman', () => {
 
     it('should convert 11:30 to "Halb zwölf"', () => {
       expect(timeToGerman(11, 30)).toBe('Halb zwölf');
-    });
-
-    it('should convert 23:30 to "Halb zwölf"', () => {
-      expect(timeToGerman(23, 30)).toBe('Halb zwölf');
     });
   });
 
@@ -119,11 +125,41 @@ describe('timeToGerman', () => {
     });
   });
 
-  describe('edge cases', () => {
-    it('should handle hour wrap-around at 23:50', () => {
-      expect(timeToGerman(23, 50)).toBe('Zehn Minuten vor zwölf');
+  describe('24-hour format with minutes (afternoon/evening)', () => {
+    it('should convert 12:25 to "Zwölf Uhr achtzehn"', () => {
+      expect(timeToGerman(12, 18)).toBe('Zwölf Uhr achtzehn');
     });
 
+    it('should convert 17:20 to "Siebzehn Uhr zwanzig"', () => {
+      expect(timeToGerman(17, 20)).toBe('Siebzehn Uhr zwanzig');
+    });
+
+    it('should convert 13:05 to "Dreizehn Uhr fünf"', () => {
+      expect(timeToGerman(13, 5)).toBe('Dreizehn Uhr fünf');
+    });
+
+    it('should convert 15:15 to "Fünfzehn Uhr fünfzehn"', () => {
+      expect(timeToGerman(15, 15)).toBe('Fünfzehn Uhr fünfzehn');
+    });
+
+    it('should convert 18:30 to "Achtzehn Uhr dreißig"', () => {
+      expect(timeToGerman(18, 30)).toBe('Achtzehn Uhr dreißig');
+    });
+
+    it('should convert 23:45 to "Dreiundzwanzig Uhr fünfundvierzig"', () => {
+      expect(timeToGerman(23, 45)).toBe('Dreiundzwanzig Uhr fünfundvierzig');
+    });
+
+    it('should convert 23:50 to "Dreiundzwanzig Uhr fünfzig"', () => {
+      expect(timeToGerman(23, 50)).toBe('Dreiundzwanzig Uhr fünfzig');
+    });
+
+    it('should convert 20:01 to "Zwanzig Uhr eine"', () => {
+      expect(timeToGerman(20, 1)).toBe('Zwanzig Uhr eine');
+    });
+  });
+
+  describe('edge cases', () => {
     it('should handle hour wrap-around at 0:30', () => {
       expect(timeToGerman(0, 30)).toBe('Halb eins');
     });

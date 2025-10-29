@@ -13,16 +13,26 @@ export const viewBase = style({
   alignItems: 'center',
   width: '100%'
 });
+
 export const gridRow = style({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'flex-start',
   gap: 12
 });
+
 export const gridRowStacked = style([
   gridRow,
   {
     flexDirection: 'column'
+  }
+]);
+
+export const gridRowStackedCentered = style([
+  gridRowStacked,
+  {
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 ]);
 

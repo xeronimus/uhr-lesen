@@ -91,7 +91,6 @@ export const useDraggablePills = ({words, onChange}: UseDraggablePillsProps) => 
       // Insert after target index
       setRectanglePills(insertAtPosition(rectanglePills, word, targetIndex + 1));
     }
-    setAvailablePills(removeOneInstance(availablePills, word));
     setDragOverIndex(null);
   };
 
@@ -102,7 +101,6 @@ export const useDraggablePills = ({words, onChange}: UseDraggablePillsProps) => 
 
   const movePillToAvailable = (word: string) => {
     setRectanglePills(removeOneInstance(rectanglePills, word));
-    setAvailablePills(appendToArray(availablePills, word));
   };
 
   const handleDropOnRectangle = () => {
@@ -131,6 +129,10 @@ export const useDraggablePills = ({words, onChange}: UseDraggablePillsProps) => 
   const handlePillClick = (word: string) => {
     if (isDragging) return;
     movePillToAvailable(word);
+  };
+  const handleAvailableClick = (word: string) => {
+    if (isDragging) return;
+    movePillToRectangle(word);
   };
 
   // Touch handlers
@@ -214,6 +216,7 @@ export const useDraggablePills = ({words, onChange}: UseDraggablePillsProps) => 
     handleDropOnPill,
     handleDropOnAvailable,
     handlePillClick,
+    handleAvailableClick,
     startTouchDrag,
     updateTouchDrag,
     endTouchDrag

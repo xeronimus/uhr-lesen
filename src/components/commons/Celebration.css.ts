@@ -48,7 +48,7 @@ export const particle = style({
   height: '10px',
   borderRadius: '50%',
   backgroundColor: vars.colors.primary,
-  animation: `${explode} 1s ease-out forwards`
+  animation: `${explode} 2s ease-out forwards`
 });
 
 export const celebrationText = style({

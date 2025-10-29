@@ -6,6 +6,7 @@ import {selectUserOrThrow} from '../../state/user/userSelectors';
 import Button from '../commons/Button';
 import MainMenu from '../commons/MainMenu';
 import * as cStyles from '../commons/_commons.css';
+import LevelList from './LevelList';
 import * as styles from './UserView.css';
 
 const UserView = () => {
@@ -18,28 +19,33 @@ const UserView = () => {
   }, [user]);
 
   const level = getMatchingLevelForPoints(user.totalPoints);
+  const gapToNextLevel = getGapToNextLevel(user.totalPoints);
+
   return (
     <div className={styles.userView}>
       <div className={cStyles.gridRow}></div>
 
-      <div className={cStyles.gridRowStacked}>
+      <div className={cStyles.gridRowStackedCentered}>
         <input type="text" id="name" value={myName} onChange={onUserNameChange} onBlur={onUserNameBlur} />
 
-        <h4>
+        <h3>
           <i className="icon icon-star" /> {user.totalPoints || 0}{' '}
-        </h4>
+        </h3>
+
         <h4>
-          {' '}
-          {level.title} (x{level.pointFactor})
+          Punkte bis zum nächsten Level: {gapToNextLevel} ({Math.ceil(gapToNextLevel / level.pointFactor)} richtige)
         </h4>
-        <h4> Punkte bis zum nächsten Level: {getGapToNextLevel(user.totalPoints)}</h4>
       </div>
 
-      <div className={cStyles.growRow}></div>
+      <div className={cStyles.growRow}>
+        <LevelList  currentLevel={level} />
+      </div>
 
-      <div className={cStyles.gridRow}>
+      <div className={cStyles.gridRowStacked}>
         <Button onClick={resetPoints}>Punkte Zurücksetzen!</Button>
       </div>
+      <div className={cStyles.growRow}></div>
+
       <MainMenu />
     </div>
   );

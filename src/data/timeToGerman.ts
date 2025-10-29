@@ -14,6 +14,22 @@ export const hourNamesLc = [
   'elf'
 ];
 
+// Hour names for 24-hour format (13-23)
+export const hour24NamesLc = [
+  'zwölf',
+  'dreizehn',
+  'vierzehn',
+  'fünfzehn',
+  'sechzehn',
+  'siebzehn',
+  'achtzehn',
+  'neunzehn',
+  'zwanzig',
+  'einundzwanzig',
+  'zweiundzwanzig',
+  'dreiundzwanzig'
+];
+
 // Minute names in German (lowercase for composition)
 export const minuteNamesLc = [
   '', // 0 is not used
@@ -45,7 +61,37 @@ export const minuteNamesLc = [
   'sechsundzwanzig',
   'siebenundzwanzig',
   'achtundzwanzig',
-  'neunundzwanzig'
+  'neunundzwanzig',
+  'dreißig',
+  'einunddreißig',
+  'zweiunddreißig',
+  'dreiunddreißig',
+  'vierunddreißig',
+  'fünfunddreißig',
+  'sechsunddreißig',
+  'siebenunddreißig',
+  'achtunddreißig',
+  'neununddreißig',
+  'vierzig',
+  'einundvierzig',
+  'zweiundvierzig',
+  'dreiundvierzig',
+  'vierundvierzig',
+  'fünfundvierzig',
+  'sechsundvierzig',
+  'siebenundvierzig',
+  'achtundvierzig',
+  'neunundvierzig',
+  'fünfzig',
+  'einundfünfzig',
+  'zweiundfünfzig',
+  'dreiundfünfzig',
+  'vierundfünfzig',
+  'fünfundfünfzig',
+  'sechsundfünfzig',
+  'siebenundfünfzig',
+  'achtundfünfzig',
+  'neunundfünfzig'
 ];
 
 export const addWordsLc = ['ein', 'viertel', 'nach', 'uhr', 'vor', 'halb', 'minute', 'Minuten'];
@@ -61,8 +107,26 @@ export const addWordsLc = ['ein', 'viertel', 'nach', 'uhr', 'vor', 'halb', 'minu
  * - timeToGerman(4, 45) => "Viertel vor fünf"
  * - timeToGerman(3, 30) => "Halb vier"
  * - timeToGerman(12, 0) => "Zwölf Uhr"
+ * - timeToGerman(17, 20) => "Siebzehn Uhr zwanzig"
+ * - timeToGerman(13, 0) => "Dreizehn Uhr"
  */
 export function timeToGerman(hour: number, minute: number): string {
+  // Capitalize first letter
+  const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
+  // For afternoon/evening times (12-23), use 24-hour format
+  if (hour >= 12) {
+    const hourName = hour24NamesLc[hour - 12];
+
+    if (minute === 0) {
+      return capitalize(`${hourName} Uhr`);
+    } else {
+      const minuteName = minuteNamesLc[minute];
+      return capitalize(`${hourName} Uhr ${minuteName}`);
+    }
+  }
+
+  // For morning times (0-12), use traditional 12-hour format
   // Normalize hour to 12-hour format
   const hour12 = hour % 12;
 
@@ -71,9 +135,6 @@ export function timeToGerman(hour: number, minute: number): string {
 
   // Get next hour name (for "vor" and "halb")
   const nextHourName = hourNamesLc[(hour12 + 1) % 12];
-
-  // Capitalize first letter
-  const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
   // Handle different minute cases
   if (minute === 0) {

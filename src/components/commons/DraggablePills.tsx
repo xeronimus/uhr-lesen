@@ -25,6 +25,7 @@ const DraggablePills = ({words, onChange}: DraggablePillsProps) => {
     handleDropOnPill,
     handleDropOnAvailable,
     handlePillClick,
+    handleAvailableClick,
     startTouchDrag,
     updateTouchDrag,
     endTouchDrag
@@ -64,6 +65,10 @@ const DraggablePills = ({words, onChange}: DraggablePillsProps) => {
 
   const onPillClick = (word: string) => {
     handlePillClick(word);
+  };
+
+  const onAvailableClick = (word: string) => {
+    handleAvailableClick(word);
   };
 
   // Touch handlers
@@ -142,6 +147,7 @@ const DraggablePills = ({words, onChange}: DraggablePillsProps) => {
               onDragStart={() => onDragStart(word, 'available')}
               onDragEnd={onDragEnd}
               onTouchStart={(e) => onTouchStart(e, word, 'available')}
+              onClick={() => onAvailableClick(word)}
             >
               {word}
             </div>
