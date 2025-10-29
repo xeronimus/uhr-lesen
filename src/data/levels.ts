@@ -54,7 +54,37 @@ const levels: Level[] = [
   }
 ];
 
-export default levels;
+assureLevelConsistency();
+
+function assureLevelConsistency() {
+  let prevPointThreshold: number | undefined;
+
+  const sortedLevels = [...levels].sort((l1, l2) => l1.threshold - l2.threshold);
+  console.log(sortedLevels);
+
+  if (!sortedLevels.length) {
+    throw new Error(`No levels defined`);
+  }
+
+  if (sortedLevels[0].threshold !== 0) {
+    throw new Error(`First level must have threshold of 0`);
+  }
+
+  sortedLevels.forEach((level, index) => {
+    if (prevPointThreshold === undefined) {
+      prevPointThreshold = level.threshold;
+      return;
+    }
+
+    if (prevPointThreshold >= level.threshold) {
+      throw new Error(
+        `Level "${level.title}" (at index ${index}) has threshold ${level.threshold}, but previous threshold was ${prevPointThreshold}`
+      );
+    }
+
+    prevPointThreshold = level.threshold;
+  });
+}
 
 export function getMatchingLevelForPoints(totalPoints: number): Level {
   const match = levels.findLast((lvl) => totalPoints >= lvl.threshold);

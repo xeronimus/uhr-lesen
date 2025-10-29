@@ -7,6 +7,7 @@ import {useAppStore} from '../../state/store';
 import {selectUserOrThrow} from '../../state/user/userSelectors';
 import AnalogClock from '../clock/AnalogClock';
 import Button from '../commons/Button';
+import Celebration from '../commons/Celebration';
 import DraggablePills from '../commons/DraggablePills';
 import MainMenu from '../commons/MainMenu';
 import * as cStyles from '../commons/_commons.css';
@@ -17,37 +18,38 @@ const GameView = () => {
   const setUser = useAppStore((state) => state.setUser);
   const [level, setLevel] = useState<Level>(getMatchingLevelForPoints(user.totalPoints));
 
+  const [celebrEffectPointsVisible, setCelebrEffectPointsVisible] = useState<boolean>(false);
+  const [celebrEffectLevelVisible, setCelebrEffectLevelVisible] = useState<boolean>(false);
+
   const [hour, setHour] = useState<number>(12);
   const [minute, setMinute] = useState<number>(0);
+  const [correctSolution, setCorrectSolution] = useState<string>('');
+  const [availableWords, setAvailableWords] = useState<string[]>([]);
+  const usersResult = useRef<string>(''); // no need to rerender when user drags words, can be a ref.
 
-  const result = useRef<string>('');
-
-  useEffect(() => {
+  function setNewTimeTask() {
     const [rndHour, rndMinute] = level.getRandomTime();
     setHour(rndHour);
     setMinute(rndMinute);
-    result.current = '';
-  }, [level]);
+    usersResult.current = '';
 
-  const germanTime = timeToGerman(hour, minute);
-  const solutionString = germanTime.toLowerCase();
-  const availableWords = getAvailableWords(solutionString);
+    const germanTime = timeToGerman(rndHour, rndMinute);
+    const solutionString = germanTime.toLowerCase();
+    setCorrectSolution(solutionString);
+    setAvailableWords(getAvailableWords(solutionString));
+  }
 
-  //  console.log(hour, minute, germanTime, solutionString);
-  // console.log(level);
+  useEffect(() => {
+    setNewTimeTask();
+  }, []);
 
   return (
     <div className={styles.gameView}>
+      {celebrEffectPointsVisible && <Celebration text="Richtig!" />}
+      {celebrEffectLevelVisible && <Celebration text="Neues Level!" stickier={true} />}
+
       <div className={cStyles.gridRow}>
-        <h4
-          onClick={() => {
-            const [rndHour, rndMinute] = level.getRandomTime();
-            setHour(rndHour);
-            setMinute(rndMinute);
-          }}
-        >
-          {level.title}
-        </h4>
+        <h4 onClick={setNewTimeTask}>{level.title}</h4>
       </div>
 
       <div className={cStyles.gridRow}>
@@ -57,7 +59,7 @@ const GameView = () => {
       </div>
 
       <div className={cStyles.gridRow}>
-        <DraggablePills words={[...availableWords]} onChange={onPillsDragged} />
+        <DraggablePills words={availableWords} onChange={onPillsDragged} />
       </div>
       <div className={cStyles.growRow}>
         <Button onClick={onCheckClicked} primary={true}>
@@ -70,14 +72,12 @@ const GameView = () => {
   );
 
   function onPillsDragged(words: string[]) {
-    result.current = words.join(' ').toLowerCase();
+    usersResult.current = words.join(' ').toLowerCase();
   }
 
   function onCheckClicked() {
-    if (result.current === solutionString) {
-      const [rndHour, rndMinute] = level.getRandomTime();
-      setHour(rndHour);
-      setMinute(rndMinute);
+    if (usersResult.current === correctSolution) {
+      setNewTimeTask();
 
       const newTotalPoints = user.totalPoints + level.pointFactor;
 
@@ -85,24 +85,48 @@ const GameView = () => {
         ...user,
         totalPoints: newTotalPoints
       });
-      // see if next level?
-      const l = getMatchingLevelForPoints(newTotalPoints);
-      setLevel(l);
+
+      // new total points, could be advancing to next level
+      const potentiallyNewLevel = getMatchingLevelForPoints(newTotalPoints);
+      if (potentiallyNewLevel.threshold !== level.threshold) {
+        setLevel(potentiallyNewLevel);
+        showCelebrationEffectLevel();
+      } else {
+        showCelebrationEffectPoints();
+      }
     }
+  }
+
+  function showCelebrationEffectPoints() {
+    setCelebrEffectPointsVisible(true);
+    setTimeout(() => setCelebrEffectPointsVisible(false), 2100);
+  }
+
+  function showCelebrationEffectLevel() {
+    setCelebrEffectLevelVisible(true);
+    setTimeout(() => setCelebrEffectLevelVisible(false), 5100);
   }
 };
 
 export default GameView;
 
-function getAvailableWords(solutionString: string) {
+/**
+ * get list of available words. will of course include the words of the given solution string (the correct time as text)
+ */
+function getAvailableWords(solutionString: string): string[] {
   const mustBeInThere = solutionString.split(' ');
   const additionalWords = uniqueStringArray([
     ...pickRandom(minuteNamesLc, 2),
     ...pickRandom(hourNamesLc, 2),
-    ...pickRandom(addWordsLc, 2),
-    'vor',
-    'nach'
+    ...pickRandom(addWordsLc, 2)
   ]);
+
+  if (!mustBeInThere.includes('nach')) {
+    additionalWords.push('nach');
+  }
+  if (!mustBeInThere.includes('vor')) {
+    additionalWords.push('vor');
+  }
 
   return shuffleArray([...additionalWords, ...mustBeInThere]).filter((s) => !!s);
 }

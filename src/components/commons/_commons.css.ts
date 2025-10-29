@@ -3,6 +3,7 @@ import {globalStyle, style} from '@vanilla-extract/css';
 import {checkboxWrapper} from './Checkbox.css';
 
 export const viewBase = style({
+  position: 'relative',
   overflowX: 'hidden',
   overflowY: 'auto',
   marginTop: 8,

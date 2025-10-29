@@ -23,6 +23,8 @@ export const availableArea = style({
 
 export const pillsContainer = style({
   display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   flexWrap: 'wrap',
   gap: '10px'
 });
@@ -59,7 +61,8 @@ export const rectangle = style({
   backgroundColor: 'rgba(0, 0, 0, 0.02)',
   flexWrap: 'nowrap',
   overflowX: 'auto',
-  touchAction: 'pan-x'
+  touchAction: 'pan-x',
+  minWidth: '80%'
 });
 
 export const placeholder = style({
