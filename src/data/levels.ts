@@ -56,7 +56,6 @@ const levels: Level[] = [
 
 export default levels;
 
-
 export function getMatchingLevelForPoints(totalPoints: number): Level {
   const match = levels.findLast((lvl) => totalPoints >= lvl.threshold);
   return match || levels[0];
@@ -70,9 +69,8 @@ export function getGapToNextLevel(totalPoints: number): number {
   }
 
   if (matchIndex === levels.length - 1) {
-    return 0
+    return 0;
   }
-
 
   return levels[matchIndex + 1].threshold - totalPoints;
 }

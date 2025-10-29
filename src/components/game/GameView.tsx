@@ -33,7 +33,6 @@ const GameView = () => {
   const solutionString = germanTime.toLowerCase();
   const availableWords = getAvailableWords(solutionString);
 
-
   //  console.log(hour, minute, germanTime, solutionString);
   // console.log(level);
 
@@ -53,12 +52,12 @@ const GameView = () => {
 
       <div className={cStyles.gridRow}>
         <div style={{width: 'min(90vmin,600px)', height: 'min(90vmin,600px)', aspectRatio: '1 / 1'}}>
-          <AnalogClock readonly={true} hour={hour} minute={minute} config={level.clockConfig}/>
+          <AnalogClock readonly={true} hour={hour} minute={minute} config={level.clockConfig} />
         </div>
       </div>
 
       <div className={cStyles.gridRow}>
-        <DraggablePills words={[...availableWords]} onChange={onPillsDragged}/>
+        <DraggablePills words={[...availableWords]} onChange={onPillsDragged} />
       </div>
       <div className={cStyles.growRow}>
         <Button onClick={onCheckClicked} primary={true}>
@@ -66,7 +65,7 @@ const GameView = () => {
         </Button>
       </div>
 
-      <MainMenu/>
+      <MainMenu />
     </div>
   );
 
@@ -91,12 +90,9 @@ const GameView = () => {
       setLevel(l);
     }
   }
-
-
 };
 
 export default GameView;
-
 
 function getAvailableWords(solutionString: string) {
   const mustBeInThere = solutionString.split(' ');
@@ -108,20 +104,16 @@ function getAvailableWords(solutionString: string) {
     'nach'
   ]);
 
-  return shuffleArray([
-      ...additionalWords,
-      ...mustBeInThere
-    ]
-  ).filter((s) => !!s);
-
+  return shuffleArray([...additionalWords, ...mustBeInThere]).filter((s) => !!s);
 }
 
 function uniqueStringArray(arr: string[]) {
-  return Object.values(arr
-    .reduce((tot: Record<string, string>, curr) => {
+  return Object.values(
+    arr.reduce((tot: Record<string, string>, curr) => {
       tot[curr] = curr;
       return tot;
-    }, {}))
+    }, {})
+  );
 }
 
 function shuffleArray<T>(array: T[]): T[] {
