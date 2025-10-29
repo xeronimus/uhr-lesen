@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 
+import getRandomInt from '../../data/getRandomInt';
 import {timeToGerman} from '../../data/timeToGerman';
 import {useAppStore} from '../../state/store';
 import AnalogClock from '../clock/AnalogClock';
@@ -7,7 +8,6 @@ import Button from '../commons/Button';
 import {Checkbox} from '../commons/Checkbox';
 import MainMenu from '../commons/MainMenu';
 import * as cStyles from '../commons/_commons.css';
-import getRandomInt from '../getRandomInt';
 import * as styles from './WelcomeView.css';
 
 const WelcomeView = () => {

@@ -18,6 +18,9 @@ export const gridRow = style({
   alignItems: 'flex-start',
   gap: 12
 });
+export const gridRowStacked = style([gridRow,{
+  flexDirection: 'column',
+}]);
 
 export const growRow = style([
   gridRow,

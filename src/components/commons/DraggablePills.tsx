@@ -27,6 +27,15 @@ const DraggablePills = ({words, onChange}: DraggablePillsProps) => {
   const availableAreaRef = useRef<HTMLDivElement>(null);
   const rectangleRef = useRef<HTMLDivElement>(null);
 
+  // Helper function to remove only one instance of a word
+  const removeOneInstance = (array: string[], word: string): string[] => {
+    const index = array.indexOf(word);
+    if (index === -1) return array;
+    const newArray = [...array];
+    newArray.splice(index, 1);
+    return newArray;
+  };
+
   useEffect(() => {
     onChange(rectanglePills);
   }, [rectanglePills]);
@@ -64,7 +73,7 @@ const DraggablePills = ({words, onChange}: DraggablePillsProps) => {
     if (draggedItem.source === 'available') {
       // Add from available pills
       setRectanglePills([...rectanglePills, draggedItem.word]);
-      setAvailablePills(availablePills.filter((w) => w !== draggedItem.word));
+      setAvailablePills(removeOneInstance(availablePills, draggedItem.word));
     }
 
     setDragOverIndex(null);
@@ -86,7 +95,7 @@ const DraggablePills = ({words, onChange}: DraggablePillsProps) => {
       const newPills = [...rectanglePills];
       newPills.splice(targetIndex + 1, 0, draggedItem.word);
       setRectanglePills(newPills);
-      setAvailablePills(availablePills.filter((w) => w !== draggedItem.word));
+      setAvailablePills(removeOneInstance(availablePills, draggedItem.word));
     }
 
     setDragOverIndex(null);
@@ -97,7 +106,7 @@ const DraggablePills = ({words, onChange}: DraggablePillsProps) => {
     if (!draggedItem || draggedItem.source !== 'rectangle') return;
 
     // Remove from rectangle and add back to available
-    setRectanglePills(rectanglePills.filter((w) => w !== draggedItem.word));
+    setRectanglePills(removeOneInstance(rectanglePills, draggedItem.word));
     setAvailablePills([...availablePills, draggedItem.word]);
   };
 
@@ -106,7 +115,7 @@ const DraggablePills = ({words, onChange}: DraggablePillsProps) => {
     if (isDragging) return;
 
     // Remove from rectangle and add back to available
-    setRectanglePills(rectanglePills.filter((w) => w !== word));
+    setRectanglePills(removeOneInstance(rectanglePills, word));
     setAvailablePills([...availablePills, word]);
   };
 
@@ -209,16 +218,16 @@ const DraggablePills = ({words, onChange}: DraggablePillsProps) => {
         const newPills = [...rectanglePills];
         newPills.splice(targetIndex + 1, 0, draggedItem.word);
         setRectanglePills(newPills);
-        setAvailablePills(availablePills.filter((w) => w !== draggedItem.word));
+        setAvailablePills(removeOneInstance(availablePills, draggedItem.word));
       } else if (draggedItem.source === 'available') {
         // Add to end of rectangle
         setRectanglePills([...rectanglePills, draggedItem.word]);
-        setAvailablePills(availablePills.filter((w) => w !== draggedItem.word));
+        setAvailablePills(removeOneInstance(availablePills, draggedItem.word));
       }
     } else if (availableAreaRef.current && elements.includes(availableAreaRef.current)) {
       // Dropped back on available area
       if (draggedItem.source === 'rectangle') {
-        setRectanglePills(rectanglePills.filter((w) => w !== draggedItem.word));
+        setRectanglePills(removeOneInstance(rectanglePills, draggedItem.word));
         setAvailablePills([...availablePills, draggedItem.word]);
       }
     }
