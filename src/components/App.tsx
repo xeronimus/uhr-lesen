@@ -5,6 +5,7 @@ import {DeviceInfoContextProvider} from './commons/DeviceInfoContext';
 import GameView from './game/GameView';
 import {defaultTheme} from './themes.css';
 import useLoadStateFromStorage from './useLoadStateFromStorage';
+import usePointsOverrideInDev from './usePointsOverrideInDev';
 import UserView from './user/UserView';
 import WelcomeView from './welcome/WelcomeView';
 
@@ -12,6 +13,8 @@ const App = () => {
   const appCssClasses = [defaultTheme, app].join(' ');
 
   const [loading] = useLoadStateFromStorage();
+
+  usePointsOverrideInDev();
 
   if (loading) {
     return <div>Loading...</div>;
