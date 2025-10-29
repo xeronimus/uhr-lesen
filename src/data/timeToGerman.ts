@@ -1,3 +1,55 @@
+// Hour names in German (lowercase for composition)
+export const hourNamesLc = [
+  'zwölf', // 0 or 12
+  'eins',
+  'zwei',
+  'drei',
+  'vier',
+  'fünf',
+  'sechs',
+  'sieben',
+  'acht',
+  'neun',
+  'zehn',
+  'elf'
+];
+
+// Minute names in German (lowercase for composition)
+export const minuteNamesLc = [
+  '', // 0 is not used
+  'eine',
+  'zwei',
+  'drei',
+  'vier',
+  'fünf',
+  'sechs',
+  'sieben',
+  'acht',
+  'neun',
+  'zehn',
+  'elf',
+  'zwölf',
+  'dreizehn',
+  'vierzehn',
+  'fünfzehn',
+  'sechzehn',
+  'siebzehn',
+  'achtzehn',
+  'neunzehn',
+  'zwanzig',
+  'einundzwanzig',
+  'zweiundzwanzig',
+  'dreiundzwanzig',
+  'vierundzwanzig',
+  'fünfundzwanzig',
+  'sechsundzwanzig',
+  'siebenundzwanzig',
+  'achtundzwanzig',
+  'neunundzwanzig'
+];
+
+export const addWordsLc = ['ein', 'viertel', 'nach', 'uhr', 'vor', 'halb', 'minute', 'Minuten'];
+
 /**
  * Converts hour and minute to German spoken time format
  * @param hour - Hour (0-23)
@@ -11,64 +63,14 @@
  * - timeToGerman(12, 0) => "Zwölf Uhr"
  */
 export function timeToGerman(hour: number, minute: number): string {
-  // Hour names in German (lowercase for composition)
-  const hourNames = [
-    'zwölf', // 0 or 12
-    'eins',
-    'zwei',
-    'drei',
-    'vier',
-    'fünf',
-    'sechs',
-    'sieben',
-    'acht',
-    'neun',
-    'zehn',
-    'elf'
-  ];
-
-  // Minute names in German (lowercase for composition)
-  const minuteNames = [
-    '', // 0 is not used
-    'eine',
-    'zwei',
-    'drei',
-    'vier',
-    'fünf',
-    'sechs',
-    'sieben',
-    'acht',
-    'neun',
-    'zehn',
-    'elf',
-    'zwölf',
-    'dreizehn',
-    'vierzehn',
-    'fünfzehn',
-    'sechzehn',
-    'siebzehn',
-    'achtzehn',
-    'neunzehn',
-    'zwanzig',
-    'einundzwanzig',
-    'zweiundzwanzig',
-    'dreiundzwanzig',
-    'vierundzwanzig',
-    'fünfundzwanzig',
-    'sechsundzwanzig',
-    'siebenundzwanzig',
-    'achtundzwanzig',
-    'neunundzwanzig'
-  ];
-
   // Normalize hour to 12-hour format
   const hour12 = hour % 12;
 
   // Get current hour name
-  const currentHourName = hourNames[hour12];
+  const currentHourName = hourNamesLc[hour12];
 
   // Get next hour name (for "vor" and "halb")
-  const nextHourName = hourNames[(hour12 + 1) % 12];
+  const nextHourName = hourNamesLc[(hour12 + 1) % 12];
 
   // Capitalize first letter
   const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -90,13 +92,13 @@ export function timeToGerman(hour: number, minute: number): string {
     return capitalize(`Viertel vor ${nextHourName}`);
   } else if (minute < 30) {
     // Minutes past: "Zehn Minuten nach sechs"
-    const minuteName = minuteNames[minute];
+    const minuteName = minuteNamesLc[minute];
     const minuteWord = minute === 1 ? 'Minute' : 'Minuten';
     return capitalize(`${minuteName} ${minuteWord} nach ${currentHourName}`);
   } else {
     // Minutes to: "Zehn Minuten vor sieben"
     const minutesUntilNextHour = 60 - minute;
-    const minuteName = minuteNames[minutesUntilNextHour];
+    const minuteName = minuteNamesLc[minutesUntilNextHour];
     const minuteWord = minutesUntilNextHour === 1 ? 'Minute' : 'Minuten';
     return capitalize(`${minuteName} ${minuteWord} vor ${nextHourName}`);
   }

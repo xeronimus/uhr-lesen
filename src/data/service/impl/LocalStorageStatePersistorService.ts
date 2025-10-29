@@ -1,4 +1,4 @@
-﻿import {AppState} from '../../../state/store';
+﻿import {AppState, isAppState} from '../../../state/store';
 import logger from '../Logger';
 import StatePersistorService from '../StatePersistorService';
 import {b64_to_utf8, utf8_to_b64} from './b64';
@@ -8,7 +8,12 @@ const LSTORAGE_PROP_PREFIX = 'UHR_LESEN';
 const LocalStorageStatePersistorService: StatePersistorService = {
   async loadState(): Promise<AppState | undefined> {
     const state = fromLocalStorage('state');
-    return state ? (state as AppState) : undefined;
+
+    if (isAppState(state)) {
+      return state;
+    } else {
+      return undefined;
+    }
   },
 
   async persistState(state: AppState): Promise<void> {

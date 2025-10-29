@@ -1,6 +1,8 @@
 import {create} from 'zustand';
 import {combine, devtools} from 'zustand/middleware';
 
+import {isAnalogClockConfig} from '../domain/AnalogClockConfig';
+import {isUser} from '../domain/User';
 import envConfig from '../envConfig';
 import {logger} from './loggerMiddleware';
 import {UiActions, getUiActions} from './ui/UiActions';
@@ -9,6 +11,15 @@ import {UserActions, getUserActions} from './user/UserActions';
 import {UserState, getDefaultUserState} from './user/UserState';
 
 export interface AppState extends UiState, UserState {}
+
+export function isAppState(obj: any): obj is AppState {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    isAnalogClockConfig(obj.clockConfig) &&
+    (obj.user === undefined || isUser(obj.user))
+  );
+}
 
 export interface AppActions extends UiActions, UserActions {}
 

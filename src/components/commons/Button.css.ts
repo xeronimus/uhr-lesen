@@ -12,7 +12,7 @@ const buttonBase = style({
   borderRadius: '1em',
   outline: 'none',
   padding: '6px 12px',
-  background: '#e6e6e6',
+  background: vars.colors.backgroundGrey,
   selectors: {
     '&:hover:not(:disabled), &:focus:not(:disabled), &:active:not(:disabled)': {
       boxShadow: `0px 0px 7px 0px ${vars.colors.primaryHue}`

@@ -13,3 +13,13 @@ export function createNewUser(name: string): User {
     totalPoints: 0
   };
 }
+
+export function isUser(obj: any): obj is User {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    typeof obj.id === 'string' &&
+    typeof obj.name === 'string' &&
+    typeof obj.totalPoints === 'number'
+  );
+}

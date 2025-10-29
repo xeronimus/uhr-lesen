@@ -7,11 +7,10 @@ import Button from '../commons/Button';
 import {Checkbox} from '../commons/Checkbox';
 import MainMenu from '../commons/MainMenu';
 import * as cStyles from '../commons/_commons.css';
+import getRandomInt from '../getRandomInt';
 import * as styles from './WelcomeView.css';
 
 const WelcomeView = () => {
-  const user = useAppStore((state) => state.user);
-  console.log(user);
   const [hour, setHour] = useState<number>(new Date().getHours());
   const [minute, setMinute] = useState<number>(new Date().getMinutes());
 
@@ -127,8 +126,8 @@ const WelcomeView = () => {
   }
 
   function onRandomClicked() {
-    setHour(getRandomInt(0, 13));
-    setMinute(getRandomInt(0, 61));
+    setHour(getRandomInt(1, 13));
+    setMinute(getRandomInt(0, 60));
   }
 
   function onClockNewTimeSet(hour: number, minute: number) {
@@ -137,11 +136,5 @@ const WelcomeView = () => {
     setMinute(minute);
   }
 };
-
-function getRandomInt(min: number, max: number) {
-  const minCeiled = Math.ceil(min);
-  const maxFloored = Math.floor(max);
-  return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
-}
 
 export default WelcomeView;

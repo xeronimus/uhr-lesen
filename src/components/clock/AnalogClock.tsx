@@ -9,11 +9,12 @@ interface AnalogClockProps {
   hour: number;
   minute: number;
   config: AnalogClockConfig;
+  readonly?: boolean; // if set to true, the clock hands cannot be dragged
   onChange?: (hour: number, minute: number) => void;
   startChanging?: () => void;
 }
 
-const AnalogClock = ({hour, minute, config, startChanging, onChange}: AnalogClockProps) => {
+const AnalogClock = ({hour, minute, config, readonly, startChanging, onChange}: AnalogClockProps) => {
   const [myHour, setMyHour] = useState<number>(hour);
   const [myMinute, setMyMinute] = useState<number>(minute);
 
@@ -135,6 +136,9 @@ const AnalogClock = ({hour, minute, config, startChanging, onChange}: AnalogCloc
   );
 
   function onStartDragging(hand: 'hour' | 'minute') {
+    if (readonly) {
+      return;
+    }
     startChanging?.();
     setDraggingHand(hand);
     previousMinuteRef.current = myMinute;
