@@ -24,7 +24,7 @@ globalStyle('input[type=text]', {
   padding: '4px 8px',
   outline: 'none',
   border: `2px solid ${vars.colors.fontGrey}`,
-  borderRadius: 20,
+  borderRadius: 10,
   textAlign: 'center'
 });
 
