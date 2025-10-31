@@ -5,10 +5,9 @@ export const levelListContainer = style({});
 globalStyle(`${levelListContainer} li `, {
   listStyleType: 'none',
   padding: 4,
-  textAlign: 'center',
+  textAlign: 'center'
 });
 
-
 export const highlighted = style({
-  fontWeight: 'bold',
-})
+  fontWeight: 'bold'
+});

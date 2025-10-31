@@ -3,6 +3,7 @@
 import {getGapToNextLevel, getMatchingLevelForPoints} from '../../data/levels';
 import {useAppStore} from '../../state/store';
 import {selectUserOrThrow} from '../../state/user/userSelectors';
+import BuildInfo from '../commons/BuildInfo';
 import Button from '../commons/Button';
 import MainMenu from '../commons/MainMenu';
 import * as cStyles from '../commons/_commons.css';
@@ -38,13 +39,15 @@ const UserView = () => {
       </div>
 
       <div className={cStyles.growRow}>
-        <LevelList  currentLevel={level} />
+        <LevelList currentLevel={level} />
       </div>
 
       <div className={cStyles.gridRowStacked}>
         <Button onClick={resetPoints}>Punkte Zurücksetzen!</Button>
       </div>
-      <div className={cStyles.growRow}></div>
+      <div className={cStyles.growRow}>
+        <BuildInfo />
+      </div>
 
       <MainMenu />
     </div>
