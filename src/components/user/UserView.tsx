@@ -1,8 +1,10 @@
 ﻿import {useEffect, useState} from 'react';
 
-import {getGapToNextLevel, getMatchingLevelForPoints} from '../../data/levels';
+import {getUserLevelInfoForPoints} from '../../domain/BaseLevel';
+import {sortedLevels as gameOneLevels} from '../../domain/ReadAnalogClockLevel';
+import {sortedLevels as gameTwoLevels} from '../../domain/ReadDigitalClockLevel';
 import {useAppStore} from '../../state/store';
-import {selectUserOrThrow} from '../../state/user/userSelectors';
+import {selectTotalPoints, selectUserOrThrow} from '../../state/user/userSelectors';
 import BuildInfo from '../commons/BuildInfo';
 import Button from '../commons/Button';
 import MainMenu from '../commons/MainMenu';
@@ -12,6 +14,7 @@ import * as styles from './UserView.css';
 
 const UserView = () => {
   const user = useAppStore(selectUserOrThrow);
+  const totalPoints = useAppStore(selectTotalPoints);
   const setUser = useAppStore((state) => state.setUser);
 
   const [myName, setMyName] = useState<string>(user.name);
@@ -19,8 +22,8 @@ const UserView = () => {
     setMyName(user.name);
   }, [user]);
 
-  const level = getMatchingLevelForPoints(user.totalPoints);
-  const gapToNextLevel = getGapToNextLevel(user.totalPoints);
+  const [gameOneLevel, gameOneGapToNextLevel] = getUserLevelInfoForPoints(gameOneLevels, user.points[0]);
+  const [gameTwoLevel, gameTwoGapToNextLevel] = getUserLevelInfoForPoints(gameTwoLevels, user.points[1]);
 
   return (
     <div className={styles.userView}>
@@ -30,20 +33,28 @@ const UserView = () => {
         <input type="text" id="name" value={myName} onChange={onUserNameChange} onBlur={onUserNameBlur} />
 
         <h3>
-          <i className="icon icon-star" /> {user.totalPoints || 0}{' '}
+          Total Punkte: <i className="icon icon-star" /> {totalPoints}
         </h3>
 
-        <h4>
-          Punkte bis zum nächsten Level: {gapToNextLevel} ({Math.ceil(gapToNextLevel / level.pointFactor)} richtige)
-        </h4>
+        <h4>Spiel 1 : Uhr lesen</h4>
+        <p>
+          Punkte bis zum nächsten Level: {gameOneGapToNextLevel} (
+          {Math.ceil(gameOneGapToNextLevel / gameOneLevel.pointFactor)} richtige)
+        </p>
+        <LevelList currentLevel={gameOneLevel} levels={gameOneLevels} />
+
+        <h4>Spiel 2 : Digitale Uhr</h4>
+        <p>
+          Punkte bis zum nächsten Level: {gameTwoGapToNextLevel} (
+          {Math.ceil(gameTwoGapToNextLevel / gameTwoLevel.pointFactor)} richtige)
+        </p>
+        <LevelList currentLevel={gameTwoLevel} levels={gameTwoLevels} />
       </div>
 
-      <div className={cStyles.growRow}>
-        <LevelList currentLevel={level} />
-      </div>
+      <div className={cStyles.growRow}></div>
 
       <div className={cStyles.gridRowStacked}>
-        <Button onClick={resetPoints}>Punkte Zurücksetzen!</Button>
+        <Button onClick={resetAllPoints}>Alle Punkte Zurücksetzen!</Button>
       </div>
       <div className={cStyles.growRow}>
         <BuildInfo />
@@ -53,10 +64,10 @@ const UserView = () => {
     </div>
   );
 
-  function resetPoints() {
+  function resetAllPoints() {
     setUser({
       ...user,
-      totalPoints: 0
+      points: [0, 0]
     });
   }
 

@@ -1,11 +1,11 @@
 ﻿import {Link} from 'wouter';
 
 import {useAppStore} from '../../state/store';
-import {selectUserOrThrow} from '../../state/user/userSelectors';
+import {selectTotalPoints} from '../../state/user/userSelectors';
 import * as styles from './MainMenu.css';
 
 const MainMenu = () => {
-  const user = useAppStore(selectUserOrThrow);
+  const totalPoints = useAppStore(selectTotalPoints);
 
   return (
     <div className={styles.mainMenu}>
@@ -15,8 +15,11 @@ const MainMenu = () => {
         <Link href="/">
           <i className="icon icon-home" /> Start
         </Link>
-        <Link href="/game">
-          <i className="icon icon-trophy" /> Spiel
+        <Link href="/game-analog-clock">
+          <i className="icon icon-trophy" /> Spiel 1
+        </Link>
+        <Link href="/game-digital-clock">
+          <i className="icon icon-trophy" /> Spiel 2
         </Link>
         <Link href="/user">
           <i className="icon icon-user" /> Profil
@@ -24,7 +27,7 @@ const MainMenu = () => {
       </div>
 
       <div>
-        <i className="icon icon-star" /> {user.totalPoints || 0}
+        <i className="icon icon-star" /> {totalPoints || 0}
       </div>
     </div>
   );

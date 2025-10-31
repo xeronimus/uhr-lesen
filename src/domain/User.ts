@@ -3,14 +3,14 @@
 export default interface User {
   id: string;
   name: string;
-  totalPoints: number;
+  points: number[]; // points per game
 }
 
 export function createNewUser(name: string): User {
   return {
     id: uuid(),
     name,
-    totalPoints: 0
+    points: [0, 0]
   };
 }
 
@@ -20,6 +20,7 @@ export function isUser(obj: any): obj is User {
     obj !== null &&
     typeof obj.id === 'string' &&
     typeof obj.name === 'string' &&
-    typeof obj.totalPoints === 'number'
+    Array.isArray(obj.points) &&
+    obj.points.length === 2
   );
 }

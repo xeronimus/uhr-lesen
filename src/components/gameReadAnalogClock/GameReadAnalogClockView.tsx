@@ -1,8 +1,8 @@
 ﻿import {useEffect, useRef, useState} from 'react';
 
-import {getMatchingLevelForPoints} from '../../data/levels';
 import {addWordsLc, hourNamesLc, minuteNamesLc, timeToGerman} from '../../data/timeToGerman';
-import Level from '../../domain/Level';
+import {getMatchingLevelForPoints} from '../../domain/BaseLevel';
+import ReadAnalogClockLevel, {sortedLevels as levels} from '../../domain/ReadAnalogClockLevel';
 import envConfig from '../../envConfig';
 import {useAppStore} from '../../state/store';
 import {selectUserOrThrow} from '../../state/user/userSelectors';
@@ -12,12 +12,12 @@ import Celebration from '../commons/Celebration';
 import DraggablePills from '../commons/DraggablePills';
 import MainMenu from '../commons/MainMenu';
 import * as cStyles from '../commons/_commons.css';
-import * as styles from './GameView.css';
+import * as styles from './GameReadAnalogClockView.css';
 
-const GameView = () => {
+const GameReadAnalogClockView = () => {
   const user = useAppStore(selectUserOrThrow);
   const setUser = useAppStore((state) => state.setUser);
-  const [level, setLevel] = useState<Level>(getMatchingLevelForPoints(user.totalPoints));
+  const [level, setLevel] = useState<ReadAnalogClockLevel>(getMatchingLevelForPoints(levels, user.points[0]));
 
   const [celebrEffectPointsVisible, setCelebrEffectPointsVisible] = useState<boolean>(false);
   const [celebrEffectLevelVisible, setCelebrEffectLevelVisible] = useState<boolean>(false);
@@ -50,7 +50,7 @@ const GameView = () => {
       {celebrEffectLevelVisible && <Celebration text="Neues Level!" stickier={true} />}
 
       <div className={cStyles.gridRow}>
-        <h4 onClick={setNewTimeTask}>{level.title}</h4>
+        <h4 onClick={setNewTimeTask}>Spiel 1 : {level.title}</h4>
       </div>
 
       <div className={cStyles.gridRow}>
@@ -87,15 +87,15 @@ const GameView = () => {
     if (usersResult.current === correctSolution) {
       setNewTimeTask();
 
-      const newTotalPoints = user.totalPoints + level.pointFactor;
+      const newTotalPoints = user.points[0] + level.pointFactor;
 
       setUser({
         ...user,
-        totalPoints: newTotalPoints
+        points: updatePoints(user.points, 0, newTotalPoints)
       });
 
       // new total points, could be advancing to next level
-      const potentiallyNewLevel = getMatchingLevelForPoints(newTotalPoints);
+      const potentiallyNewLevel = getMatchingLevelForPoints(levels, newTotalPoints);
       if (potentiallyNewLevel.threshold !== level.threshold) {
         setLevel(potentiallyNewLevel);
         showCelebrationEffectLevel();
@@ -116,7 +116,7 @@ const GameView = () => {
   }
 };
 
-export default GameView;
+export default GameReadAnalogClockView;
 
 /**
  * get list of available words. will of course include the words of the given solution string (the correct time as text)
@@ -166,4 +166,14 @@ function pickRandom<T>(array: T[], n: number): T[] {
   }
 
   return result;
+}
+
+function updatePoints(pointArray: number[], index: number, newPoints: number) {
+  return pointArray.map((item, i) => {
+    if (index !== i) {
+      return item;
+    }
+
+    return newPoints;
+  });
 }

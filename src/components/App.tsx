@@ -2,7 +2,8 @@ import {Route, Router, Switch} from 'wouter';
 
 import {app} from './App.css';
 import {DeviceInfoContextProvider} from './commons/DeviceInfoContext';
-import GameView from './game/GameView';
+import GameReadAnalogClockView from './gameReadAnalogClock/GameReadAnalogClockView';
+import GameReadDigitalClockView from './gameReadDigitalClock/GameReadDigitalClockView';
 import {defaultTheme} from './themes.css';
 import useLoadStateFromStorage from './useLoadStateFromStorage';
 import usePointsOverrideInDev from './usePointsOverrideInDev';
@@ -26,7 +27,8 @@ const App = () => {
         <div className={appCssClasses}>
           <Switch>
             <Route path="/welcome" component={WelcomeView} />
-            <Route path="/game" component={GameView} />
+            <Route path="/game-analog-clock" component={GameReadAnalogClockView} />
+            <Route path="/game-digital-clock" component={GameReadDigitalClockView} />
             <Route path="/user" component={UserView} />
             <Route component={WelcomeView} />
           </Switch>

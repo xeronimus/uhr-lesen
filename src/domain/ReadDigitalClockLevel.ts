@@ -1,9 +1,14 @@
-﻿import Level from '../domain/Level';
-import {getRandomHour12, getRandomHour24, getRandomInt, getRandomMinute} from './getRandomTimes';
+﻿import {getRandomHour12, getRandomHour24, getRandomInt, getRandomMinute} from '../data/getRandomTimes';
+import AnalogClockConfig from './AnalogClockConfig';
+import BaseLevel, {assureLevelConsistency} from './BaseLevel';
 
-const levelsRaw: Level[] = [
+export default interface ReadDigitalClockLevel extends BaseLevel {
+  clockConfig: AnalogClockConfig;
+  getRandomTime: () => [number, number];
+}
+
+const levelsRaw: ReadDigitalClockLevel[] = [
   {
-    // minute will always be quarter after or half past or quarter to or "full hour"
     title: 'Level 1',
     pointFactor: 1,
     threshold: 0,
@@ -93,55 +98,6 @@ const levelsRaw: Level[] = [
   }
 ];
 
-const sortedLevels = [...levelsRaw].sort((l1, l2) => l1.threshold - l2.threshold);
-export default sortedLevels;
+export const sortedLevels = [...levelsRaw].sort((l1: BaseLevel, l2: BaseLevel) => l1.threshold - l2.threshold);
 
-assureLevelConsistency();
-
-function assureLevelConsistency() {
-  let prevPointThreshold: number | undefined;
-
-  console.log(sortedLevels);
-
-  if (!sortedLevels.length) {
-    throw new Error(`No levels defined`);
-  }
-
-  if (sortedLevels[0].threshold !== 0) {
-    throw new Error(`First level must have threshold of 0`);
-  }
-
-  sortedLevels.forEach((level, index) => {
-    if (prevPointThreshold === undefined) {
-      prevPointThreshold = level.threshold;
-      return;
-    }
-
-    if (prevPointThreshold >= level.threshold) {
-      throw new Error(
-        `Level "${level.title}" (at index ${index}) has threshold ${level.threshold}, but previous threshold was ${prevPointThreshold}`
-      );
-    }
-
-    prevPointThreshold = level.threshold;
-  });
-}
-
-export function getMatchingLevelForPoints(totalPoints: number): Level {
-  const match = sortedLevels.findLast((lvl) => totalPoints >= lvl.threshold);
-  return match || sortedLevels[0];
-}
-
-export function getGapToNextLevel(totalPoints: number): number {
-  const matchIndex = sortedLevels.findLastIndex((lvl) => totalPoints >= lvl.threshold);
-
-  if (matchIndex < 0) {
-    return sortedLevels[1].threshold - totalPoints;
-  }
-
-  if (matchIndex === sortedLevels.length - 1) {
-    return 0;
-  }
-
-  return sortedLevels[matchIndex + 1].threshold - totalPoints;
-}
+assureLevelConsistency(sortedLevels);

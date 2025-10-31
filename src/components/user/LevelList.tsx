@@ -1,16 +1,16 @@
-﻿import Levels from '../../data/levels';
-import Level from '../../domain/Level';
+﻿import BaseLevel from '../../domain/BaseLevel';
 import * as styles from './LevelList.css';
 
 interface LevelListProps {
-  currentLevel: Level;
+  levels: BaseLevel[];
+  currentLevel: BaseLevel;
 }
 
-const LevelList = ({currentLevel}: LevelListProps) => {
+const LevelList = ({levels, currentLevel}: LevelListProps) => {
   return (
     <div className={styles.levelListContainer}>
       <ol>
-        {Levels.map((level) => (
+        {levels.map((level) => (
           <li
             key={`lvl:${level.threshold}`}
             className={currentLevel.threshold === level.threshold ? styles.highlighted : ''}

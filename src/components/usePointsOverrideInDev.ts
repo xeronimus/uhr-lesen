@@ -9,12 +9,12 @@ export default function usePointsOverrideInDev() {
 
   useEffect(() => {
     if (envConfig.isDev && user) {
-      console.log('DEV Mode: global function overridePoints(100) ');
+      console.log('DEV Mode: global function overridePoints([100,200]) ');
       //@ts-ignore
-      window.overridePoints = (points: number) => {
+      window.overridePoints = (points: number[]) => {
         setUser({
           ...user,
-          totalPoints: points
+          points
         });
       };
     }

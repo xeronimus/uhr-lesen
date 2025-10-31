@@ -1,0 +1,113 @@
+﻿import {useEffect, useRef, useState} from 'react';
+
+import {getMatchingLevelForPoints} from '../../domain/BaseLevel';
+import ReadDigitalClockLevel, {sortedLevels as levels} from '../../domain/ReadDigitalClockLevel';
+import {useAppStore} from '../../state/store';
+import {selectUserOrThrow} from '../../state/user/userSelectors';
+import AnalogClock from '../clock/AnalogClock';
+import DigitalClock from '../clock/DigitalClock';
+import Button from '../commons/Button';
+import Celebration from '../commons/Celebration';
+import MainMenu from '../commons/MainMenu';
+import * as cStyles from '../commons/_commons.css';
+import * as styles from './GameReadDigitalClockView.css';
+
+const GameReadDigitalClockView = () => {
+  const user = useAppStore(selectUserOrThrow);
+  const setUser = useAppStore((state) => state.setUser);
+  const [level, setLevel] = useState<ReadDigitalClockLevel>(getMatchingLevelForPoints(levels, user.points[1]));
+
+  const [celebrEffectPointsVisible, setCelebrEffectPointsVisible] = useState<boolean>(false);
+  const [celebrEffectLevelVisible, setCelebrEffectLevelVisible] = useState<boolean>(false);
+
+  const [hour, setHour] = useState<number>(12);
+  const [minute, setMinute] = useState<number>(0);
+  const usersResult = useRef<[number, number]>([0, 0]); // no need to rerender when user drags clock hands
+  function setNewTimeTask() {
+    const [rndHour, rndMinute] = level.getRandomTime();
+    setHour(rndHour);
+    setMinute(rndMinute);
+  }
+
+  useEffect(() => {
+    setNewTimeTask();
+  }, []);
+
+  return (
+    <div className={styles.gameView}>
+      {celebrEffectPointsVisible && <Celebration text="Richtig!" />}
+      {celebrEffectLevelVisible && <Celebration text="Neues Level!" stickier={true} />}
+
+      <div className={cStyles.gridRow}>
+        <h4 onClick={setNewTimeTask}>Spiel 2 : {level.title}</h4>
+      </div>
+
+      <div className={cStyles.gridRowStackedCentered}>
+        <DigitalClock hour={hour} minute={minute} />
+
+        <h4>Stelle die Uhr richtig ein</h4>
+        <div style={{width: 'min(80vmin,600px)', height: 'min(80vmin,600px)', aspectRatio: '1 / 1'}}>
+          <AnalogClock hour={0} minute={0} config={level.clockConfig} onChange={onClockHandsDragged} />
+        </div>
+      </div>
+
+      <div className={cStyles.growRow}>
+        <Button onClick={onCheckClicked} primary={true}>
+          Prüfen
+        </Button>
+      </div>
+
+      <MainMenu />
+    </div>
+  );
+
+  function onClockHandsDragged(hour: number, minute: number) {
+    usersResult.current = [hour, minute];
+  }
+
+  function onCheckClicked() {
+    const userResultHour = usersResult.current[0];
+    const userResultMinute = usersResult.current[1];
+    if (userResultMinute === minute && (userResultHour === hour || userResultHour + 12 === hour)) {
+      setNewTimeTask();
+
+      const newTotalPoints = user.points[1] + level.pointFactor;
+
+      setUser({
+        ...user,
+        points: updatePoints(user.points, 1, newTotalPoints)
+      });
+
+      // new total points, could be advancing to next level
+      const potentiallyNewLevel = getMatchingLevelForPoints(levels, newTotalPoints);
+      if (potentiallyNewLevel.threshold !== level.threshold) {
+        setLevel(potentiallyNewLevel);
+        showCelebrationEffectLevel();
+      } else {
+        showCelebrationEffectPoints();
+      }
+    }
+  }
+
+  function showCelebrationEffectPoints() {
+    setCelebrEffectPointsVisible(true);
+    setTimeout(() => setCelebrEffectPointsVisible(false), 2100);
+  }
+
+  function showCelebrationEffectLevel() {
+    setCelebrEffectLevelVisible(true);
+    setTimeout(() => setCelebrEffectLevelVisible(false), 5100);
+  }
+};
+
+export default GameReadDigitalClockView;
+
+function updatePoints(pointArray: number[], index: number, newPoints: number) {
+  return pointArray.map((item, i) => {
+    if (index !== i) {
+      return item;
+    }
+
+    return newPoints;
+  });
+}

@@ -3,7 +3,7 @@
 }
 
 export function getRandomHour12() {
-  return getRandomInt(0, 13); // 0....12
+  return getRandomInt(0, 12); // 0....11
 }
 
 export function getRandomMinute() {
