@@ -11,6 +11,7 @@ import AnalogClock from '../clock/AnalogClock';
 import Button from '../commons/Button';
 import Celebration from '../commons/Celebration';
 import DraggablePills from '../commons/DraggablePills';
+import IconButton from '../commons/IconButton';
 import MainMenu from '../commons/MainMenu';
 import * as cStyles from '../commons/_commons.css';
 import * as styles from './GameReadAnalogClockView.css';
@@ -18,7 +19,9 @@ import * as styles from './GameReadAnalogClockView.css';
 const GameReadAnalogClockView = () => {
   const user = useAppStore(selectUserOrThrow);
   const setUser = useAppStore((state) => state.setUser);
-  const [level, setLevel] = useState<ReadAnalogClockLevel>(getMatchingLevelForPoints(levels, user.points[0]));
+
+  const maxLevel = getMatchingLevelForPoints(levels, user.points[0]);
+  const [level, setLevel] = useState<ReadAnalogClockLevel>(maxLevel);
 
   const [celebrEffectPointsVisible, setCelebrEffectPointsVisible] = useState<boolean>(false);
   const [celebrEffectLevelVisible, setCelebrEffectLevelVisible] = useState<boolean>(false);
@@ -53,7 +56,15 @@ const GameReadAnalogClockView = () => {
       <audio ref={audioRef} controls={false} preload={'auto'} src="/sound/win.mp3" />
 
       <div className={cStyles.gridRow}>
-        <h4 onClick={setNewTimeTask}>Spiel 1 : {level.title}</h4>
+        <h4>
+          <IconButton iconClass={`icon-left-dir`} onClick={onLevelBackClick} disabled={level.levelIndex < 1} />
+          <span onClick={setNewTimeTask}>{level.title}</span>
+          <IconButton
+            iconClass="icon-right-dir"
+            onClick={onLevelForwardClick}
+            disabled={level.levelIndex >= maxLevel.levelIndex}
+          />
+        </h4>
       </div>
 
       <div className={cStyles.gridRow}>
@@ -105,6 +116,22 @@ const GameReadAnalogClockView = () => {
       } else {
         showCelebrationEffectPoints();
       }
+    }
+  }
+
+  function onLevelBackClick() {
+    if (level.levelIndex > 0) {
+      const newLevel = levels[level.levelIndex - 1];
+      setLevel(newLevel);
+      setNewTimeTask();
+    }
+  }
+
+  function onLevelForwardClick() {
+    if (level.levelIndex < maxLevel.levelIndex) {
+      const newLevel = levels[level.levelIndex + 1];
+      setLevel(newLevel);
+      setNewTimeTask();
     }
   }
 

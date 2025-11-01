@@ -11,14 +11,14 @@ export const mainMenu = style({
   backgroundColor: vars.colors.primary,
   width: '100%',
   color: 'white',
-  padding: 4
+  padding: 0
 });
 
 globalStyle(`${mainMenu} > div `, {
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
-  gap: 24
+  gap: 4
 });
 
 globalStyle(`${mainMenu} > div:first-child `, {
@@ -33,18 +33,32 @@ globalStyle(`${mainMenu} > div:last-child `, {
   gap: 0
 });
 
-globalStyle(`${mainMenu} a:link, ${mainMenu} a:visited, ${mainMenu} a:active `, {
+export const link = style({
   color: 'white',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
   gap: 1,
-  textDecoration: 'none'
+  textDecoration: 'none',
+  whiteSpace: 'nowrap',
+  padding: '4px 8px'
 });
 
-globalStyle(`${mainMenu} a i`, {
+const boxShadowColorActiveLink = 'rgba(0,0,0,0.6)';
+export const activeLink = style([
+  link,
+  {
+    boxShadow: `inset 0px 0px 15px -1px ${boxShadowColorActiveLink}`
+  }
+]);
+
+// globalStyle(`${mainMenu} a:link, ${mainMenu} a:visited, ${mainMenu} a:active `, {
+//
+// });
+
+globalStyle(`${link} i`, {
   fontSize: '140%'
 });
 
-globalStyle(`${mainMenu} a:hover`, {});
+// globalStyle(`${mainMenu} a:hover`, {});

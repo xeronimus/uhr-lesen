@@ -9,6 +9,7 @@ import AnalogClock from '../clock/AnalogClock';
 import DigitalClock from '../clock/DigitalClock';
 import Button from '../commons/Button';
 import Celebration from '../commons/Celebration';
+import IconButton from '../commons/IconButton';
 import MainMenu from '../commons/MainMenu';
 import * as cStyles from '../commons/_commons.css';
 import * as styles from './GameReadDigitalClockView.css';
@@ -16,7 +17,8 @@ import * as styles from './GameReadDigitalClockView.css';
 const GameReadDigitalClockView = () => {
   const user = useAppStore(selectUserOrThrow);
   const setUser = useAppStore((state) => state.setUser);
-  const [level, setLevel] = useState<ReadDigitalClockLevel>(getMatchingLevelForPoints(levels, user.points[1]));
+  const maxLevel = getMatchingLevelForPoints(levels, user.points[1]);
+  const [level, setLevel] = useState<ReadDigitalClockLevel>(maxLevel);
 
   const [celebrEffectPointsVisible, setCelebrEffectPointsVisible] = useState<boolean>(false);
   const [celebrEffectLevelVisible, setCelebrEffectLevelVisible] = useState<boolean>(false);
@@ -43,14 +45,22 @@ const GameReadDigitalClockView = () => {
       <audio ref={audioRef} controls={false} preload={'auto'} src="/sound/win.mp3" />
 
       <div className={cStyles.gridRow}>
-        <h4 onClick={setNewTimeTask}>Spiel 2 : {level.title}</h4>
+        <h4>
+          <IconButton iconClass={`icon-left-dir`} onClick={onLevelBackClick} disabled={level.levelIndex < 1} />
+          <span onClick={setNewTimeTask}>{level.title}</span>
+          <IconButton
+            iconClass="icon-right-dir"
+            onClick={onLevelForwardClick}
+            disabled={level.levelIndex >= maxLevel.levelIndex}
+          />
+        </h4>
       </div>
 
       <div className={cStyles.gridRowStackedCentered}>
         <DigitalClock hour={hour} minute={minute} />
 
         <h4>Stelle die Uhr richtig ein</h4>
-        <div style={{width: 'min(80vmin,600px)', height: 'min(80vmin,600px)', aspectRatio: '1 / 1'}}>
+        <div style={{width: 'min(90vmin, 600px)', height: 'min(90vmin, 600px)', aspectRatio: '1 / 1'}}>
           <AnalogClock hour={0} minute={0} config={level.clockConfig} onChange={onClockHandsDragged} />
         </div>
       </div>
@@ -67,6 +77,22 @@ const GameReadDigitalClockView = () => {
 
   function onClockHandsDragged(hour: number, minute: number) {
     usersResult.current = [hour, minute];
+  }
+
+  function onLevelBackClick() {
+    if (level.levelIndex > 0) {
+      const newLevel = levels[level.levelIndex - 1];
+      setLevel(newLevel);
+      setNewTimeTask();
+    }
+  }
+
+  function onLevelForwardClick() {
+    if (level.levelIndex < maxLevel.levelIndex) {
+      const newLevel = levels[level.levelIndex + 1];
+      setLevel(newLevel);
+      setNewTimeTask();
+    }
   }
 
   function onCheckClicked() {

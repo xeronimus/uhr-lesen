@@ -10,6 +10,8 @@
   the amount of points a user must have so that this level is available
    */
   threshold: number;
+
+  levelIndex: number;
 }
 
 export function assureLevelConsistency(levels: BaseLevel[]) {

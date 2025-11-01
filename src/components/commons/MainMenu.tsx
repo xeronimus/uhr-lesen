@@ -12,16 +12,16 @@ const MainMenu = () => {
       <div></div>
 
       <div>
-        <Link href="/">
+        <Link href="/" className={(active) => (active ? styles.activeLink : styles.link)}>
           <i className="icon icon-home" /> Start
         </Link>
-        <Link href="/game-analog-clock">
+        <Link href="/game-analog-clock" className={(active) => (active ? styles.activeLink : styles.link)}>
           <i className="icon icon-trophy" /> Spiel 1
         </Link>
-        <Link href="/game-digital-clock">
+        <Link href="/game-digital-clock" className={(active) => (active ? styles.activeLink : styles.link)}>
           <i className="icon icon-trophy" /> Spiel 2
         </Link>
-        <Link href="/user">
+        <Link href="/user" className={(active) => (active ? styles.activeLink : styles.link)}>
           <i className="icon icon-user" /> Profil
         </Link>
       </div>

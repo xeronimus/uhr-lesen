@@ -13,6 +13,7 @@ const levelsRaw: ReadAnalogClockLevel[] = [
     title: 'Level 1',
     pointFactor: 1,
     threshold: 0,
+    levelIndex: 0,
     clockConfig: {
       showMinuteNumbers: true,
       showMinuteTicks: false,
@@ -31,6 +32,7 @@ const levelsRaw: ReadAnalogClockLevel[] = [
     title: 'Level 2',
     pointFactor: 2,
     threshold: 10,
+    levelIndex: 0,
     clockConfig: {
       showMinuteNumbers: true,
       showMinuteTicks: false,
@@ -49,6 +51,7 @@ const levelsRaw: ReadAnalogClockLevel[] = [
     title: 'Level 3',
     pointFactor: 4,
     threshold: 30,
+    levelIndex: 0,
     clockConfig: {
       showMinuteNumbers: true,
       showMinuteTicks: false,
@@ -67,6 +70,7 @@ const levelsRaw: ReadAnalogClockLevel[] = [
     title: 'Level 4',
     pointFactor: 8,
     threshold: 70,
+    levelIndex: 0,
     clockConfig: {
       showMinuteNumbers: false,
       showMinuteTicks: true,
@@ -85,6 +89,7 @@ const levelsRaw: ReadAnalogClockLevel[] = [
     title: 'Level 5',
     pointFactor: 10,
     threshold: 150,
+    levelIndex: 0,
     clockConfig: {
       showMinuteNumbers: true,
       showMinuteTicks: false,
@@ -99,6 +104,11 @@ const levelsRaw: ReadAnalogClockLevel[] = [
   }
 ];
 
-export const sortedLevels = [...levelsRaw].sort((l1, l2) => l1.threshold - l2.threshold);
+export const sortedLevels = [...levelsRaw]
+  .sort((l1, l2) => l1.threshold - l2.threshold)
+  .map((l, i) => {
+    l.levelIndex = i;
+    return l;
+  });
 
 assureLevelConsistency(sortedLevels);
