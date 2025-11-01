@@ -3,6 +3,7 @@
 import {addWordsLc, hourNamesLc, minuteNamesLc, timeToGerman} from '../../data/timeToGerman';
 import {getMatchingLevelForPoints} from '../../domain/BaseLevel';
 import ReadAnalogClockLevel, {sortedLevels as levels} from '../../domain/ReadAnalogClockLevel';
+import {updatePointsInUserPointsArray} from '../../domain/User';
 import envConfig from '../../envConfig';
 import {useAppStore} from '../../state/store';
 import {selectUserOrThrow} from '../../state/user/userSelectors';
@@ -26,13 +27,14 @@ const GameReadAnalogClockView = () => {
   const [minute, setMinute] = useState<number>(0);
   const [correctSolution, setCorrectSolution] = useState<string>('');
   const [availableWords, setAvailableWords] = useState<string[]>([]);
-  const usersResult = useRef<string>(''); // no need to rerender when user drags words, can be a ref.
+  const usersResultRef = useRef<string>(''); // no need to rerender when user drags words, can be a ref.
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   function setNewTimeTask() {
     const [rndHour, rndMinute] = level.getRandomTime();
     setHour(rndHour);
     setMinute(rndMinute);
-    usersResult.current = '';
+    usersResultRef.current = '';
 
     const germanTime = timeToGerman(rndHour, rndMinute);
     const solutionString = germanTime.toLowerCase();
@@ -48,6 +50,7 @@ const GameReadAnalogClockView = () => {
     <div className={styles.gameView}>
       {celebrEffectPointsVisible && <Celebration text="Richtig!" />}
       {celebrEffectLevelVisible && <Celebration text="Neues Level!" stickier={true} />}
+      <audio ref={audioRef} controls={false} preload={'auto'} src="/sound/win.mp3" />
 
       <div className={cStyles.gridRow}>
         <h4 onClick={setNewTimeTask}>Spiel 1 : {level.title}</h4>
@@ -80,18 +83,18 @@ const GameReadAnalogClockView = () => {
   );
 
   function onPillsDragged(words: string[]) {
-    usersResult.current = words.join(' ').toLowerCase();
+    usersResultRef.current = words.join(' ').toLowerCase();
   }
 
   function onCheckClicked() {
-    if (usersResult.current === correctSolution) {
+    if (usersResultRef.current === correctSolution) {
       setNewTimeTask();
 
       const newTotalPoints = user.points[0] + level.pointFactor;
 
       setUser({
         ...user,
-        points: updatePoints(user.points, 0, newTotalPoints)
+        points: updatePointsInUserPointsArray(user.points, 0, newTotalPoints)
       });
 
       // new total points, could be advancing to next level
@@ -111,6 +114,7 @@ const GameReadAnalogClockView = () => {
   }
 
   function showCelebrationEffectLevel() {
+    audioRef.current?.play();
     setCelebrEffectLevelVisible(true);
     setTimeout(() => setCelebrEffectLevelVisible(false), 5100);
   }
@@ -166,14 +170,4 @@ function pickRandom<T>(array: T[], n: number): T[] {
   }
 
   return result;
-}
-
-function updatePoints(pointArray: number[], index: number, newPoints: number) {
-  return pointArray.map((item, i) => {
-    if (index !== i) {
-      return item;
-    }
-
-    return newPoints;
-  });
 }

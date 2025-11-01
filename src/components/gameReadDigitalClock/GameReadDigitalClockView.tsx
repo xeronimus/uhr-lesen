@@ -2,6 +2,7 @@
 
 import {getMatchingLevelForPoints} from '../../domain/BaseLevel';
 import ReadDigitalClockLevel, {sortedLevels as levels} from '../../domain/ReadDigitalClockLevel';
+import {updatePointsInUserPointsArray} from '../../domain/User';
 import {useAppStore} from '../../state/store';
 import {selectUserOrThrow} from '../../state/user/userSelectors';
 import AnalogClock from '../clock/AnalogClock';
@@ -23,6 +24,8 @@ const GameReadDigitalClockView = () => {
   const [hour, setHour] = useState<number>(12);
   const [minute, setMinute] = useState<number>(0);
   const usersResult = useRef<[number, number]>([0, 0]); // no need to rerender when user drags clock hands
+  const audioRef = useRef<HTMLAudioElement>(null);
+
   function setNewTimeTask() {
     const [rndHour, rndMinute] = level.getRandomTime();
     setHour(rndHour);
@@ -37,6 +40,7 @@ const GameReadDigitalClockView = () => {
     <div className={styles.gameView}>
       {celebrEffectPointsVisible && <Celebration text="Richtig!" />}
       {celebrEffectLevelVisible && <Celebration text="Neues Level!" stickier={true} />}
+      <audio ref={audioRef} controls={false} preload={'auto'} src="/sound/win.mp3" />
 
       <div className={cStyles.gridRow}>
         <h4 onClick={setNewTimeTask}>Spiel 2 : {level.title}</h4>
@@ -75,7 +79,7 @@ const GameReadDigitalClockView = () => {
 
       setUser({
         ...user,
-        points: updatePoints(user.points, 1, newTotalPoints)
+        points: updatePointsInUserPointsArray(user.points, 1, newTotalPoints)
       });
 
       // new total points, could be advancing to next level
@@ -95,19 +99,10 @@ const GameReadDigitalClockView = () => {
   }
 
   function showCelebrationEffectLevel() {
+    audioRef.current?.play();
     setCelebrEffectLevelVisible(true);
     setTimeout(() => setCelebrEffectLevelVisible(false), 5100);
   }
 };
 
 export default GameReadDigitalClockView;
-
-function updatePoints(pointArray: number[], index: number, newPoints: number) {
-  return pointArray.map((item, i) => {
-    if (index !== i) {
-      return item;
-    }
-
-    return newPoints;
-  });
-}

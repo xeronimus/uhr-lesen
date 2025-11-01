@@ -24,3 +24,15 @@ export function isUser(obj: any): obj is User {
     obj.points.length === 2
   );
 }
+
+/**
+ *
+ */
+export const updatePointsInUserPointsArray = (pointArray: number[], index: number, newPoints: number) =>
+  pointArray.map((item, i) => {
+    if (index !== i) {
+      return item;
+    }
+
+    return newPoints;
+  });
