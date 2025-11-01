@@ -36,14 +36,18 @@ const UserView = () => {
           Total Punkte: <i className="icon icon-star" /> {totalPoints}
         </h3>
 
-        <h4>Spiel 1 : Uhr lesen</h4>
+        <h4>
+          Spiel 1 : Uhr lesen <i className="icon icon-star" /> {user.points[0]}
+        </h4>
         <p>
           Punkte bis zum nächsten Level: {gameOneGapToNextLevel} (
           {Math.ceil(gameOneGapToNextLevel / gameOneLevel.pointFactor)} richtige)
         </p>
         <LevelList currentLevel={gameOneLevel} levels={gameOneLevels} />
 
-        <h4>Spiel 2 : Digitale Uhr</h4>
+        <h4>
+          Spiel 2 : Digitale Uhr <i className="icon icon-star" /> {user.points[1]}
+        </h4>
         <p>
           Punkte bis zum nächsten Level: {gameTwoGapToNextLevel} (
           {Math.ceil(gameTwoGapToNextLevel / gameTwoLevel.pointFactor)} richtige)

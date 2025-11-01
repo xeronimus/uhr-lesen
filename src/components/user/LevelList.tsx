@@ -15,9 +15,9 @@ const LevelList = ({levels, currentLevel}: LevelListProps) => {
             key={`lvl:${level.threshold}`}
             className={currentLevel.threshold === level.threshold ? styles.highlighted : ''}
           >
-            {currentLevel.threshold === level.threshold && <i className="icon icon-star" />}
+            {currentLevel.threshold === level.threshold && <i className="icon icon-right-dir" />}
             {level.title} - {level.threshold} (x{level.pointFactor})
-            {currentLevel.threshold === level.threshold && <i className="icon icon-star" />}
+            {currentLevel.threshold === level.threshold && <i className="icon icon-left-dir" />}
           </li>
         ))}
       </ol>

@@ -30,7 +30,7 @@ export const pillsContainer = style({
 });
 
 export const pill = style({
-  padding: '6px 16px',
+  padding: '3px 8px',
   backgroundColor: vars.colors.backgroundGrey,
   borderRadius: 8,
   cursor: 'grab',
@@ -80,7 +80,7 @@ export const pillDragOver = style({
 
 export const pillDragging = style({
   opacity: 0.3,
-  transform: 'scale(0.9)'
+  transform: 'scale(0.6)'
 });
 
 export const floatingPill = style({
