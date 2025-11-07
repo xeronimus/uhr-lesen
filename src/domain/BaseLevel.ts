@@ -65,3 +65,23 @@ export function getGapToNextLevel<T extends BaseLevel>(levels: T[], userPoints: 
 
   return levels[matchIndex + 1].threshold - userPoints;
 }
+
+export function progressInLevel<T extends BaseLevel>(level: T, levels: T[], userPoints: number) {
+  const nextLevelOrUndefined = level.levelIndex < levels.length - 1 ? levels[level.levelIndex + 1] : undefined;
+
+  if (!nextLevelOrUndefined) {
+    return 100;
+  }
+
+  const maxLevel = getMatchingLevelForPoints(levels, userPoints);
+  if (level.levelIndex !== maxLevel.levelIndex) {
+    return 100;
+  }
+
+  const span = nextLevelOrUndefined.threshold - level.threshold;
+  const pos = userPoints - level.threshold;
+  const perc = Math.floor((pos / span) * 100);
+
+  // console.log('points', userPoints, 'span', span, 'pos', pos, 'perc', perc);
+  return perc;
+}

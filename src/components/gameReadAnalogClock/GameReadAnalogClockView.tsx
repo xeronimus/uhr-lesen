@@ -57,7 +57,8 @@ const GameReadAnalogClockView = () => {
 
       <GameLevelHeader
         level={level}
-        maxLevel={maxLevel}
+        levels={levels}
+        userPoints={user.points[0]}
         onLevelBackClick={onLevelBackClick}
         onLevelForwardClick={onLevelForwardClick}
         onSetNewTimeTask={setNewTimeTask}

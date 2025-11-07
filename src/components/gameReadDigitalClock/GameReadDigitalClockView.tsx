@@ -46,7 +46,8 @@ const GameReadDigitalClockView = () => {
 
       <GameLevelHeader
         level={level}
-        maxLevel={maxLevel}
+        levels={levels}
+        userPoints={user.points[1]}
         onLevelBackClick={onLevelBackClick}
         onLevelForwardClick={onLevelForwardClick}
         onSetNewTimeTask={setNewTimeTask}

@@ -1,25 +1,31 @@
-﻿import BaseLevel from '../../domain/BaseLevel';
+﻿import BaseLevel, {getMatchingLevelForPoints, progressInLevel} from '../../domain/BaseLevel';
 import * as styles from './GameLevelHeader.css';
 import IconButton from './IconButton';
-import * as cStyles from './_commons.css';
+import ProgressBar from './ProgressBar';
 
 interface GameLevelHeaderProps {
-  level: BaseLevel;
-  maxLevel: BaseLevel;
+  userPoints: number;
+  level: BaseLevel; // can be different from the max possible level (resulting from the points), since the user can manually step back to a lower level
+  levels: BaseLevel[];
   onSetNewTimeTask: () => void;
   onLevelBackClick: (newLevelIndex: number) => void;
   onLevelForwardClick: (newLevelIndex: number) => void;
 }
 
 const GameLevelHeader = ({
+  levels,
   level,
-  maxLevel,
+  userPoints,
   onLevelBackClick,
   onLevelForwardClick,
   onSetNewTimeTask
 }: GameLevelHeaderProps) => {
+  const maxLevel = getMatchingLevelForPoints(levels, userPoints);
+
   return (
-    <div className={[cStyles.gridRow, styles.gameLevelHeader].join(' ')}>
+    <div className={styles.gameLevelHeader}>
+      <div className={styles.spacer} />
+
       <h4>
         <IconButton iconClass={`icon-left-dir`} onClick={onBackClick} disabled={level.levelIndex < 1} />
         <span onClick={onSetNewTimeTask}>{level.title}</span>
@@ -29,6 +35,8 @@ const GameLevelHeader = ({
           disabled={level.levelIndex >= maxLevel.levelIndex}
         />
       </h4>
+
+      <ProgressBar percentage={progressInLevel(level, levels, userPoints)} />
     </div>
   );
 
