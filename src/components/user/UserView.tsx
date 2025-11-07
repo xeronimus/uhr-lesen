@@ -7,6 +7,7 @@ import {useAppStore} from '../../state/store';
 import {selectTotalPoints, selectUserOrThrow} from '../../state/user/userSelectors';
 import BuildInfo from '../commons/BuildInfo';
 import Button from '../commons/Button';
+import ConfirmDialog from '../commons/ConfirmDialog';
 import MainMenu from '../commons/MainMenu';
 import * as cStyles from '../commons/_commons.css';
 import LevelList from './LevelList';
@@ -18,6 +19,8 @@ const UserView = () => {
   const setUser = useAppStore((state) => state.setUser);
 
   const [myName, setMyName] = useState<string>(user.name);
+  const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
+
   useEffect(() => {
     setMyName(user.name);
   }, [user]);
@@ -58,21 +61,30 @@ const UserView = () => {
       <div className={cStyles.growRow}></div>
 
       <div className={cStyles.gridRowStacked}>
-        <Button onClick={resetAllPoints}>Alle Punkte Zurücksetzen!</Button>
+        <Button onClick={() => setShowConfirmDialog(true)}>Alle Punkte Zurücksetzen!</Button>
       </div>
       <div className={cStyles.growRow}>
         <BuildInfo />
       </div>
 
       <MainMenu />
+
+      {showConfirmDialog && (
+        <ConfirmDialog
+          message="Möchtest du wirklich alle Punkte zurücksetzen?"
+          onConfirm={confirmResetAllPoints}
+          onCancel={() => setShowConfirmDialog(false)}
+        />
+      )}
     </div>
   );
 
-  function resetAllPoints() {
+  function confirmResetAllPoints() {
     setUser({
       ...user,
       points: [0, 0]
     });
+    setShowConfirmDialog(false);
   }
 
   function onUserNameChange(e: React.ChangeEvent<HTMLInputElement>) {
